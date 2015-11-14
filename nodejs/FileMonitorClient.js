@@ -1,10 +1,10 @@
 var net = require('net');
 var fs = require("fs")
-require("buffer")
+
 var HOST = '192.168.3.79';
 var PORT = 6969;
 
-var root_path = "monitor file director path"
+var root_path = "../../SPYOnline"
 var ignoreFile=[".DS_Store"];
 var filename="allFile.txt"
 
@@ -15,34 +15,41 @@ var fileWriteStream = fs.createWriteStream('./'+filename,{
 });
 
 
-function foreachDir(path)
+function foreachDir(path,dir)
 {
-  var file = fs.readdirSync(path)
+  // console.log(path+"/"+dir)
+  var abs_path = path+"/"+dir
+  var file = fs.readdirSync((path))
+
   file.forEach(function(file){
      // console.log("Foreach:"+path+"/"+file)
-     var stat=fs.statSync(path +"/"+ file);
+    //  var sub_path = dir+"/"+file
+     var stat=fs.statSync(path+"/"+file);
      if(stat.isDirectory()){
          // 如果是文件夹遍历
            var dir_path = path+"/"+file
-           // ary.push(dir_path)
-           fileWriteStream.write(dir_path+"\n");
-           foreachDir(dir_path);
+           var dir_name = dir+"/"+file
+           fileWriteStream.write(dir_name+"\n");
+           foreachDir(dir_path,dir_name);
+
      }else{
          // 读出所有的文件
          if(ignoreFile.indexOf(file)==-1)
          {
            var p_dir = path+"/"+file
            // console.log(path+"/"+file);
-           fileWriteStream.write(p_dir+"\n");
+           var file_name = dir+"/"+file
+           fileWriteStream.write(file_name+"\n");
          }
      }
    })
 }
 
 
-foreachDir(root_path+"src")
-foreachDir(root_path+"res")
+foreachDir(root_path+"/src","src")
+foreachDir(root_path+"/res","res")
 // fileWriteStream.close()
+
 
 // 创建一个TCP服务器实例，调用listen函数开始监听指定端口
 // 传入net.createServer()的回调函数将作为”connection“事件的处理函数
@@ -52,27 +59,24 @@ net.createServer(function(sock) {
     console.log('CONNECTED: ' +
         sock.remoteAddress + ':' + sock.remotePort);
 
+        function sendData(data)
+        {
+            var buf = new Buffer(32)
+            buf.writeInt32LE(String(data.length),0)
+            console.log(buf.readInt32LE())
+            sock.write(buf)
+            sock.write(data)
+        }
+
     // 为这个socket实例添加一个"data"事件处理函数
     sock.on('data', function(data) {
         console.log('DATA ' + sock.remoteAddress + ': ' + data);
         // 回发该数据，客户端将收到来自服务端的数据
-
-        fs.readFile("text.txt", function (error, fileData) {
+        //发送同步文件列表
+        sendData(Buffer(filename));
+        fs.readFile("./"+filename, function (error, fileData) {
           if(error) throw error;
-
-          console.log(fileData);
-
-          // var buf = [Buffer(fileData.length),Buffer("Heep")];
-          // sock.write(fileData.length);
-          var len = 128000000//fileData.length
-          var buf = new Buffer(32)
-          buf.writeInt32LE(String(len),0)
-          console.log(buf.readInt32LE())
-
-          sock.write(buf)
-
-          // sock.write(fileData)
-          // sock.write();
+          sendData(fileData);
         });
     });
 
