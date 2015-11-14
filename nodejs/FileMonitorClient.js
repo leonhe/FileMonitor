@@ -4,7 +4,7 @@ require("buffer")
 var HOST = '192.168.3.79';
 var PORT = 6969;
 
-var root_path = "/Users/yuanfei/workspance/SPYOnline/"
+var root_path = "monitor file director path"
 var ignoreFile=[".DS_Store"];
 var filename="allFile.txt"
 
