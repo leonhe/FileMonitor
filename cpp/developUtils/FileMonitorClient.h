@@ -11,9 +11,7 @@
 
 #include <sys/socket.h>
 #include <thread>
-#include "PlatformMacros.h"
 
-NS_TENGCHONG_BEGIN
 class FileMonitorClient
 {
 public:
@@ -33,6 +31,4 @@ private:
     int sokt;
     std::thread _receiveThread;
 };
-    NS_TENGCHONG_END;
-
 #endif /* FileMonitorClient_hpp */

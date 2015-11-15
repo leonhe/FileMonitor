@@ -14,13 +14,10 @@
 #include <netdb.h>
 #include <string>
 #include <iostream>
-#include "cocos2d.h"
 #include <thread>
 #include <functional>
 #include <sys/errno.h>
-USING_NS_CC;
 
-NS_TENGCHONG_BEGIN
 
 FileMonitorClient* FileMonitorClient::_instance = nullptr;
 
@@ -105,7 +102,7 @@ void FileMonitorClient::getFileList()
     const char buf[]="Hello";
    ssize_t len=send(sokt, buf, strlen(buf),0);
     if (len==-1) {
-        CCLOG("发送消息失败");
+        std::cout<<("发送消息失败")<<std::endl;
         return;
     }
     
@@ -123,7 +120,7 @@ void FileMonitorClient::loopReceiveFile()
         int er=errno;
         if(er>0)
         {
-            CCLOG(strerror(er));
+            std::cout<<strerror(er)<<std::endl;
             break;
         }
 
@@ -131,7 +128,7 @@ void FileMonitorClient::loopReceiveFile()
         if(len>0)
         {
             memcpy((&data_size),(&data_size_buff),SIZE_TYPE_LEN-1);
-            CCLOG("接收到的包长度:%d",data_size);
+            std::cout<<"接收到的包长度:"<<data_size<<std::endl;
         }
         if(len==SIZE_TYPE_LEN-1)
         {
@@ -140,11 +137,11 @@ void FileMonitorClient::loopReceiveFile()
             int er=errno;
             if(er>0)
             {
-                CCLOG(strerror(er));
+                std::cout<<(strerror(er))<<std::endl;
                 break;
             }
             if (len>0) {
-                CCLOG(buf);
+                std::cout<<(buf)<<std::endl;
             }
         }
 
@@ -154,4 +151,3 @@ void FileMonitorClient::loopReceiveFile()
     }
     
 }
-NS_TENGCHONG_END;
