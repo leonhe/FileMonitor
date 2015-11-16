@@ -10,6 +10,9 @@
 #include "FileMonitorClient.h"
 
 int main(int argc, const char * argv[]) {
-    FileMonitorClient::getInstance()->connect("127.0.0.1", "6969");
+    FileMonitorClient::getInstance()->connect("192.168.1.6", "6969");
+    while (true) {
+        
+    }
     return 0;
 }

@@ -114,36 +114,43 @@ void FileMonitorClient::loopReceiveFile()
     {
         //读取数据长度
         const ssize_t SIZE_TYPE_LEN = sizeof(int)+1;
-        char data_size_buff[SIZE_TYPE_LEN];
-        memset(&data_size_buff,0,SIZE_TYPE_LEN);
-        ssize_t len = recv(sokt,(&data_size_buff),SIZE_TYPE_LEN-1,0);
+//        char data_size_buff[SIZE_TYPE_LEN];
+//        memset(&data_size_buff,0,SIZE_TYPE_LEN);
+        ssize_t data_size =0;
+        int len = recv(sokt,(&data_size),sizeof(int),0);
         int er=errno;
         if(er>0)
         {
             std::cout<<strerror(er)<<std::endl;
             break;
         }
-
-        unsigned int data_size =0;
-        if(len>0)
+        if(!data_size) continue;
+        
+        std::cout<<"接收到的包长度:"<<data_size<<std::endl;
+        ssize_t recv_len=0;
+        char buf[MAX_BUFF_SIZE];
+        memset(&buf, 0, MAX_BUFF_SIZE);
+        while (recv_len<data_size)
         {
-            memcpy((&data_size),(&data_size_buff),SIZE_TYPE_LEN-1);
-            std::cout<<"接收到的包长度:"<<data_size<<std::endl;
+            recv_len=recv(sokt, (&buf)+recv_len, data_size, 0);
+            std::string str(buf);
+            std::cout<<(str.c_str())<<std::endl;
         }
-        if(len==SIZE_TYPE_LEN-1)
-        {
-            char buf[MAX_BUFF_SIZE];
-            ssize_t len=recv(sokt,(&buf),MAX_BUFF_SIZE, 0);
-            int er=errno;
-            if(er>0)
-            {
-                std::cout<<(strerror(er))<<std::endl;
-                break;
-            }
-            if (len>0) {
-                std::cout<<(buf)<<std::endl;
-            }
-        }
+        
+//        if(len==SIZE_TYPE_LEN-1)
+//        {
+//            char buf[MAX_BUFF_SIZE];
+//            ssize_t len=recv(sokt,(&buf),MAX_BUFF_SIZE, 0);
+//            int er=errno;
+//            if(er>0)
+//            {
+//                std::cout<<(strerror(er))<<std::endl;
+//                break;
+//            }
+//            if (len>0) {
+//                std::cout<<(buf)<<std::endl;
+//            }
+//        }
 
 
 //        delete [] buf;

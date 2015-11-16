@@ -1,7 +1,7 @@
 var net = require('net');
 var fs = require("fs")
 
-var HOST = '192.168.3.79';
+var HOST = '192.168.1.6';
 var PORT = 6969;
 
 var root_path = "../../SPYOnline"
@@ -73,11 +73,14 @@ net.createServer(function(sock) {
         console.log('DATA ' + sock.remoteAddress + ': ' + data);
         // 回发该数据，客户端将收到来自服务端的数据
         //发送同步文件列表
-        sendData(Buffer(filename));
-        fs.readFile("./"+filename, function (error, fileData) {
-          if(error) throw error;
-          sendData(fileData);
-        });
+        var buf=new Buffer(filename.length)
+        buf.write(filename,0)
+        console.log(buf.toString())
+        sendData(buf);
+        // fs.readFile("./"+filename, function (error, fileData) {
+        //   if(error) throw error;
+        //   sendData(fileData);
+        // });
     });
 
     // 为这个socket实例添加一个"close"事件处理函数
