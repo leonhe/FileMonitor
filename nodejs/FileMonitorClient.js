@@ -1,10 +1,10 @@
 var net = require('net');
 var fs = require("fs")
 
-var HOST = '192.168.1.6';
+var HOST = '192.168.1.66'; //获取本机ip地址
 var PORT = 6969;
 
-var root_path = "../../SPYOnline"
+var root_path = "./"
 var ignoreFile=[".DS_Store"];
 var filename="allFile.txt"
 
@@ -13,6 +13,10 @@ var fileWriteStream = fs.createWriteStream('./'+filename,{
   encoding: 'utf8',
   mode: 0777
 });
+
+//TODO fs.watch检测改变的文件
+//TODO 初始化上传文件列表文件到客户端
+//TODO 匹配文件列表中文件是否有改动然后进行更新文件
 
 
 function foreachDir(path,dir)
