@@ -4,7 +4,7 @@ var fs = require("fs")
 var HOST = '192.168.1.66'; //获取本机ip地址
 var PORT = 6969;
 
-var root_path = "./"
+var root_path = "../../Juhuiwan/"
 var ignoreFile=[".DS_Store"];
 var filename="allFile.txt"
 
@@ -49,9 +49,24 @@ function foreachDir(path,dir)
    })
 }
 
+ function sendData(sock,command_value,data)
+{
+            var command = new Buffer(4)
+            command.writeInt32LE(String(command_value),0)
+            console.log(command.readInt32LE())
+
+            var buf = new Buffer(4)
+            buf.writeInt32LE(String(data.length),0)
+            console.log(buf.readInt32LE())
+
+            sock.write(command)
+            sock.write(buf)
+            sock.write(data)
+}
 
 foreachDir(root_path+"/src","src")
 foreachDir(root_path+"/res","res")
+
 // fileWriteStream.close()
 
 
@@ -63,29 +78,35 @@ net.createServer(function(sock) {
     console.log('CONNECTED: ' +
         sock.remoteAddress + ':' + sock.remotePort);
 
-        function sendData(data)
-        {
-            var buf = new Buffer(32)
-            buf.writeInt32LE(String(data.length),0)
-            console.log(buf.readInt32LE())
-            sock.write(buf)
-            sock.write(data)
-        }
 
     // 为这个socket实例添加一个"data"事件处理函数
     sock.on('data', function(data) {
         console.log('DATA ' + sock.remoteAddress + ': ' + data);
         // 回发该数据，客户端将收到来自服务端的数据
         //发送同步文件列表
-        var buf=new Buffer(filename.length)
+       
+         var buf=new Buffer(filename.length)
         buf.write(filename,0)
         console.log(buf.toString())
-        sendData(buf);
-        // fs.readFile("./"+filename, function (error, fileData) {
-        //   if(error) throw error;
-        //   sendData(fileData);
-        // });
-    });
+        sendData(sock,1000,buf);
+
+        fs.readFile("./"+filename, function (error, fileData) {
+          if(error) throw error;
+
+          sendData(sock,1001,fileData);
+          // var file_list=String(fileData).split("\n")
+          // // console.log(file_list)
+          // file_list.forEach(function(filePath){
+          //       console.log(root_path+"/"+filePath)
+          //      fs.readFile(root_path+"/"+filePath, function (error, fileData) {
+          //           if(error) throw error;
+          //           sendData(1003,filePath)
+          //           sendData(1004,fileData)
+          //      });  
+
+          // })
+        });
+});
 
     // 为这个socket实例添加一个"close"事件处理函数
     sock.on('close', function(data) {
