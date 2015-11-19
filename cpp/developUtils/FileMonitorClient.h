@@ -30,6 +30,8 @@ public:
     void excuteRecvList();
     void getFileData();
     
+    void sendData(std::string &command,const char* buf,ssize_t len);
+    
 private:
     static FileMonitorClient* _instance;
     int sokt;

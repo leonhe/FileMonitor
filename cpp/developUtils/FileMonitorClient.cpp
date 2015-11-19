@@ -99,12 +99,33 @@ void FileMonitorClient::getFileList()
     _receiveThread.detach();
 //    CCLOG("DSA");
     const char buf[]="Hello";
-   ssize_t len=send(sokt, buf, strlen(buf),0);
-    if (len==-1) {
-        std::cout<<("发送消息失败")<<std::endl;
-        return;
-    }
+//   ssize_t len=send(sokt, buf, strlen(buf),0);
+//    if (len==-1) {
+//        std::cout<<("发送消息失败")<<std::endl;
+//        return;
+//    }
+    ssize_t len = strlen(buf);
+    std::string command = "2000";
+    this->sendData(command,buf, len);
     
+}
+
+void FileMonitorClient::sendData(std::string &command, const char *buf, ssize_t len)
+{
+    char send_buf[1024]={0};
+    memcpy(send_buf,command.c_str(), command.size());
+    memcpy(send_buf+command.size(),buf, len);
+    std::cout<<send_buf<<std::endl;
+    len =len+sizeof(int)+1;
+    ssize_t send_len=0;
+    while (send_len<len) {
+        send_len = send(sokt, send_buf, len, 0);
+        int err = errno;
+        if (err>0) {
+            std::cout<<("发送消息失败")<<strerror(err)<<std::endl;
+            break;
+        }
+    }
 }
 
 void FileMonitorClient::getFileData()
@@ -120,7 +141,7 @@ void FileMonitorClient::getFileData()
         memset(&buf, 0, 512);
         memcpy(&buf, (void*)(&command), sizeof(int));
         memcpy((&buf)+sizeof(int), data.c_str(), data.size());
-        std::cout<<buf<<std::endl;
+//        std::cout<<buf<<std::endl;
     }
     ifs.close();
 }
