@@ -84,7 +84,9 @@ net.createServer(function(sock) {
         console.log('DATA ' + sock.remoteAddress + ': ' + data);
         // 回发该数据，客户端将收到来自服务端的数据
         //发送同步文件列表
-       
+
+        var command=data[4]
+        console.log(command)
          var buf=new Buffer(filename.length)
         buf.write(filename,0)
         console.log(buf.toString())

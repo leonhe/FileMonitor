@@ -28,6 +28,7 @@ public:
     void getFileList();
     void loopReceiveFile();
     void excuteRecvList();
+    void getFileData();
     
 private:
     static FileMonitorClient* _instance;

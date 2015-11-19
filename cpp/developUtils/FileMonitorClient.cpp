@@ -107,6 +107,25 @@ void FileMonitorClient::getFileList()
     
 }
 
+void FileMonitorClient::getFileData()
+{
+    
+    std::fstream ifs;
+    ifs.open(filename,std::ifstream::in);
+    std::string data;
+    while (getline(ifs,data)) {
+//        std::cout<<data<<"data"<<std::endl;
+        int command = 1004;
+        char buf[512];
+        memset(&buf, 0, 512);
+        memcpy(&buf, (void*)(&command), sizeof(int));
+        memcpy((&buf)+sizeof(int), data.c_str(), data.size());
+        std::cout<<buf<<std::endl;
+    }
+    ifs.close();
+}
+
+
 void FileMonitorClient::excuteRecvList()
 {
     revice_mtx.lock();
@@ -124,10 +143,11 @@ void FileMonitorClient::excuteRecvList()
             fs.open(filename.c_str(),std::fstream::in | std::fstream::out | std::fstream::app);
             fs<<data_buf;
             fs.close();
+            this->getFileData();
         }
         
-        std::cout<<"command:"<<command<<" data:"<<data_buf<<std::endl;
-        delete data_buf;
+//        std::cout<<"command:"<<command<<" data:"<<data_buf<<std::endl;
+        delete [] data_buf;
         data_buf=nullptr;
     }
     reviceList_.clear();
