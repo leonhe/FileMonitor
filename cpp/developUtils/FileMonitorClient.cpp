@@ -17,11 +17,12 @@
 #include <thread>
 #include <functional>
 #include <sys/errno.h>
-
+#include <fstream>
 
 FileMonitorClient* FileMonitorClient::_instance = nullptr;
 
 #define MAX_BUFF_SIZE 4096
+
 
 FileMonitorClient* FileMonitorClient::getInstance()
 {
@@ -94,10 +95,8 @@ void FileMonitorClient::connect(const char* host,const char* port)
 
 void FileMonitorClient::getFileList()
 {
-//    FileUtils::getInstance()->getWritablePath();
-    
-    
     _receiveThread = std::thread(std::bind( &FileMonitorClient::loopReceiveFile, this));
+    _receiveThread.detach();
 //    CCLOG("DSA");
     const char buf[]="Hello";
    ssize_t len=send(sokt, buf, strlen(buf),0);
@@ -108,53 +107,64 @@ void FileMonitorClient::getFileList()
     
 }
 
+void FileMonitorClient::excuteRecvList()
+{
+    revice_mtx.lock();
+    for (auto recv_it=reviceList_.begin(); recv_it!=reviceList_.end(); ++recv_it) {
+        int command = recv_it->first;
+        const char* data_buf = recv_it->second;
+        if (command==1000)
+        {
+            std::fstream fs;
+            fs.open(data_buf,std::fstream::in | std::fstream::out | std::fstream::app);
+            filename=data_buf;
+            fs.close();
+        }else if (command==1001){
+            std::fstream fs;
+            fs.open(filename.c_str(),std::fstream::in | std::fstream::out | std::fstream::app);
+            fs<<data_buf;
+            fs.close();
+        }
+        
+        std::cout<<"command:"<<command<<" data:"<<data_buf<<std::endl;
+        delete data_buf;
+        data_buf=nullptr;
+    }
+    reviceList_.clear();
+    revice_mtx.unlock();
+    
+}
+
 void FileMonitorClient::loopReceiveFile()
 {
     while(true)
     {
+        //读取命令
+        int command = 0;
+        ssize_t recv_len=recv(sokt, &command, sizeof(int), 0);
         //读取数据长度
-        const ssize_t SIZE_TYPE_LEN = sizeof(int)+1;
-//        char data_size_buff[SIZE_TYPE_LEN];
-//        memset(&data_size_buff,0,SIZE_TYPE_LEN);
         ssize_t data_size =0;
-        int len = recv(sokt,(&data_size),sizeof(int),0);
+        recv_len = recv(sokt,(&data_size),sizeof(int),0);
         int er=errno;
         if(er>0)
         {
             std::cout<<strerror(er)<<std::endl;
-            break;
         }
         if(!data_size) continue;
         
         std::cout<<"接收到的包长度:"<<data_size<<std::endl;
-        ssize_t recv_len=0;
-        char buf[MAX_BUFF_SIZE];
-        memset(&buf, 0, MAX_BUFF_SIZE);
+        recv_len=0;
+        char *buf=new char[data_size+1]{0};
         while (recv_len<data_size)
         {
-            recv_len=recv(sokt, (&buf)+recv_len, data_size, 0);
-            std::string str(buf);
-            std::cout<<(str.c_str())<<std::endl;
+            recv_len=recv(sokt, buf+recv_len, data_size-recv_len, 0);
+            
         }
-        
-//        if(len==SIZE_TYPE_LEN-1)
-//        {
-//            char buf[MAX_BUFF_SIZE];
-//            ssize_t len=recv(sokt,(&buf),MAX_BUFF_SIZE, 0);
-//            int er=errno;
-//            if(er>0)
-//            {
-//                std::cout<<(strerror(er))<<std::endl;
-//                break;
-//            }
-//            if (len>0) {
-//                std::cout<<(buf)<<std::endl;
-//            }
-//        }
-
-
+        std::string str(buf);
+        revice_mtx.lock();
+        reviceList_[command] = buf;
+        revice_mtx.unlock();
 //        delete [] buf;
-//        buf=nullptr;
     }
     
 }

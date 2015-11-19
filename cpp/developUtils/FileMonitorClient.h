@@ -11,7 +11,9 @@
 
 #include <sys/socket.h>
 #include <thread>
-
+#include <map>
+#include <string>
+#include <mutex>
 class FileMonitorClient
 {
 public:
@@ -25,10 +27,14 @@ public:
     
     void getFileList();
     void loopReceiveFile();
+    void excuteRecvList();
     
 private:
     static FileMonitorClient* _instance;
     int sokt;
     std::thread _receiveThread;
+    std::map<int,char*> reviceList_;
+    std::mutex revice_mtx;
+    std::string filename;
 };
 #endif /* FileMonitorClient_hpp */

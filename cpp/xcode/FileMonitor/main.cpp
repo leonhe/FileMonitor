@@ -10,9 +10,10 @@
 #include "FileMonitorClient.h"
 
 int main(int argc, const char * argv[]) {
-    FileMonitorClient::getInstance()->connect("192.168.1.6", "6969");
+    auto fileMoition=FileMonitorClient::getInstance();
+    fileMoition->connect("192.168.1.66", "6969");
     while (true) {
-        
+        fileMoition->excuteRecvList();
     }
     return 0;
 }
