@@ -5,3 +5,5 @@ compiler:
 branches:
 only:
 - master
+os:
+- osx
