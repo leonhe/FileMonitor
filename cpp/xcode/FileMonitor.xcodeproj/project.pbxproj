@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4640D6871BF838C20090F0F3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4640D6861BF838C20090F0F3 /* main.cpp */; };
-		4640D6901BF8391C0090F0F3 /* FileMonitorClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4640D68E1BF8391C0090F0F3 /* FileMonitorClient.cpp */; };
+		C061EE941BFF650B00B2A55A /* FileMonitorClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C061EE921BFF650B00B2A55A /* FileMonitorClient.cpp */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -26,8 +26,8 @@
 /* Begin PBXFileReference section */
 		4640D6831BF838C20090F0F3 /* FileMonitor */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FileMonitor; sourceTree = BUILT_PRODUCTS_DIR; };
 		4640D6861BF838C20090F0F3 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		4640D68E1BF8391C0090F0F3 /* FileMonitorClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileMonitorClient.cpp; sourceTree = "<group>"; };
-		4640D68F1BF8391C0090F0F3 /* FileMonitorClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileMonitorClient.h; sourceTree = "<group>"; };
+		C061EE921BFF650B00B2A55A /* FileMonitorClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileMonitorClient.cpp; sourceTree = "<group>"; };
+		C061EE931BFF650B00B2A55A /* FileMonitorClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileMonitorClient.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,20 +60,11 @@
 		4640D6851BF838C20090F0F3 /* FileMonitor */ = {
 			isa = PBXGroup;
 			children = (
-				4640D68D1BF8391C0090F0F3 /* developUtils */,
+				C061EE921BFF650B00B2A55A /* FileMonitorClient.cpp */,
+				C061EE931BFF650B00B2A55A /* FileMonitorClient.h */,
 				4640D6861BF838C20090F0F3 /* main.cpp */,
 			);
 			path = FileMonitor;
-			sourceTree = "<group>";
-		};
-		4640D68D1BF8391C0090F0F3 /* developUtils */ = {
-			isa = PBXGroup;
-			children = (
-				4640D68E1BF8391C0090F0F3 /* FileMonitorClient.cpp */,
-				4640D68F1BF8391C0090F0F3 /* FileMonitorClient.h */,
-			);
-			name = developUtils;
-			path = ../../developUtils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -133,7 +124,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4640D6871BF838C20090F0F3 /* main.cpp in Sources */,
-				4640D6901BF8391C0090F0F3 /* FileMonitorClient.cpp in Sources */,
+				C061EE941BFF650B00B2A55A /* FileMonitorClient.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
