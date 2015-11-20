@@ -7,3 +7,5 @@ only:
 - master
 os:
 - osx
+notifications:
+  email: false
