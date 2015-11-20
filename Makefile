@@ -1,4 +1,4 @@
-CC = g++ -std=c++11
+CC = g++ -std=gnu++0x
 CFLAGS=-c -Wall -std=gnu++0x
 
 FileMonitor : main.o FileMonitorClient.o
