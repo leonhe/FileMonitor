@@ -1,5 +1,5 @@
 CC = g++ -std=c++11
-CFLAGS=-O3 -std=c++0x -pg -D_DEBUG -g -c -Wall
+CFLAGS=-c -Wall -std=gnu++0x
 
 FileMonitor : main.o FileMonitorClient.o
 	$(CC) -o main.o FileMonitorClient.o 
