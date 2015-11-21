@@ -132,10 +132,10 @@ void FileMonitorClient::sendData(std::string &command, const char *buf, ssize_t 
     char bufs[10]={0};
     sprintf(bufs, "%09lu",senddata.size());
     std::string buflen(bufs);
-    send(sokt,buflen.c_str(),buflen.size(), 0);
+    buflen.append(senddata);
     
     while (send_len<len) {
-        send_len = send(sokt, senddata.c_str(), senddata.size()+1, 0);
+        send_len = send(sokt, buflen.c_str(), buflen.size(), 0);
         int err = errno;
         if (err>0) {
             std::cout<<("发送消息失败")<<strerror(err)<<std::endl;

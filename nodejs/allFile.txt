@@ -1,0 +1,11 @@
+src/cocos
+src/cocos/3d
+src/cocos/3d/3dConstants.lua
+src/cocos/cocos2d
+src/cocos/cocos2d/Cocos2d.lua
+src/cocos/cocos2d/Cocos2dConstants.lua
+src/cocos/cocos2d/DeprecatedCocos2dClass.lua
+src/cocos/cocos2d/DeprecatedCocos2dEnum.lua
+src/cocos/cocos2d/DeprecatedCocos2dFunc.lua
+src/cocos/cocos2d/DeprecatedOpenglEnum.lua
+src/cocos/cocos2d/DrawPrimitives.lua

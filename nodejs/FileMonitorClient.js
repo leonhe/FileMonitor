@@ -124,19 +124,28 @@ net.createServer(function(sock) {
         // console.log('DATA ' + sock.remoteAddress + ': ' + data);
         // 回发该数据，客户端将收到来自服务端的数据
         //发送同步文件列表
-        var data_len = parseInt((data.slice(0,9)).toString("utf8"));
-        
-        var jsonstr = (data.slice(0,data.length-1)).toString("utf8");
+        var offset_val = 0;
+        var recvie_data=[]
+      while(offset_val<data.length){
+
+        var data_len = parseInt((data.slice(offset_val,offset_val+9)).toString("utf8"));
+        var jsonstr = (data.slice(offset_val+9,offset_val+data_len+9)).toString("utf8");
 
         var json=JSON.parse(jsonstr);
-        var reciv_data = json;
-        var command=reciv_data.command;
-        var data = reciv_data.data;
-        var fun = service[command];
-        if(fun){
-            fun(data);
-        }
+        recvie_data.push(json);
+        offset_val+=(data_len+9);
+      }
 
+        recvie_data.forEach(function(value){
+
+            var command=value.command;
+            var data = value.data;
+            var fun = service[command];
+            if(fun){
+                fun(data);
+            }
+        });
+        //
         // console.log("command:"+command+"   data:"+data)
 
 });
