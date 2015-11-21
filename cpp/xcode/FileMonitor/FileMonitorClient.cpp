@@ -21,6 +21,7 @@
 #include <istream>
 #include <sys/dir.h>
 #include <sys/stat.h>
+#include <sys/unistd.h>
 
 FileMonitorClient* FileMonitorClient::_instance = nullptr;
 
