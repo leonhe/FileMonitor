@@ -163,12 +163,12 @@ void FileMonitorClient::getFileData()
                 data=data.substr(pos+1,data.size());
 //                std::cout<<"create director:"<<dirnane<<std::endl;
                 parent_dir.append(dirnane);
-                if (access(parent_dir.c_str(), R_OK | W_OK)==-1) {
+//                if (access(parent_dir.c_str(), R_OK | W_OK)==-1) {
                     int res= mkdir(parent_dir.c_str(),S_IRWXU);
                     if (res==-1) {
                         std::cout<<"mkdir"<<parent_dir<<" error"<<std::endl;
                     }
-                }
+//                }
                 parent_dir.append("/");
 
             }
