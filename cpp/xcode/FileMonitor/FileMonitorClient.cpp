@@ -18,6 +18,9 @@
 #include <functional>
 #include <sys/errno.h>
 #include <fstream>
+#include <istream>
+#include <sys/dir.h>
+#include <sys/stat.h>
 
 FileMonitorClient* FileMonitorClient::_instance = nullptr;
 
@@ -136,12 +139,37 @@ void FileMonitorClient::getFileData()
     std::string data;
     while (getline(ifs,data)) {
 //        std::cout<<data<<"data"<<std::endl;
-        int command = 1004;
+        auto strit = data.find(".");
+        if (strit==std::string::npos) {
+            std::cout<<"director"<<std::endl;
+            std::string dir("/Users/yuanfei/workspance/");
+            dir.append(data);
+            
+            ssize_t pos=0;
+            std::string parent_dir;
+            while (pos!=std::string::npos) {
+                pos=data.find("/");
+                auto dirnane = data.substr(0,pos);
+                data=data.substr(pos+1,data.size());
+//                std::cout<<"create director:"<<dirnane<<std::endl;
+                parent_dir.append(dirnane);
+                if (access(parent_dir.c_str(), R_OK | W_OK)==-1) {
+                    int res= mkdir(parent_dir.c_str(),S_IRWXU);
+                    if (res==-1) {
+                        std::cout<<"mkdir"<<parent_dir<<" error"<<std::endl;
+                    }
+                }
+                parent_dir.append("/");
+
+            }
+        }else{
+            int command = 1004;
         char buf[512];
         memset(&buf, 0, 512);
         memcpy(&buf, (void*)(&command), sizeof(int));
         memcpy((&buf)+sizeof(int), data.c_str(), data.size());
-//        std::cout<<buf<<std::endl;
+        std::cout<<buf<<std::endl;
+        }
     }
     ifs.close();
 }

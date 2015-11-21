@@ -11,7 +11,7 @@
 
 int main(int argc, const char * argv[]) {
     auto fileMoition=FileMonitorClient::getInstance();
-    fileMoition->connect("192.168.1.66", "6969");
+    fileMoition->connect("192.168.1.8", "6969");
     while (true) {
         fileMoition->excuteRecvList();
     }

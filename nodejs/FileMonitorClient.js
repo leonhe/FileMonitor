@@ -4,7 +4,7 @@ var fs = require("fs")
 var HOST = '192.168.1.66'; //获取本机ip地址
 var PORT = 6969;
 
-var root_path = "../../Juhuiwan/"
+var root_path = "../../SPYOnline/"
 var ignoreFile=[".DS_Store"];
 var filename="allFile.txt"
 
@@ -66,13 +66,16 @@ function foreachDir(path,dir)
             sock.write(data)
 }
 
-foreachDir(root_path+"/src","src")
-foreachDir(root_path+"/res","res")
+
 
 
 var service ={}
 service["2000"] = function(data)
 {
+
+  foreachDir(root_path+"/src","src")
+  foreachDir(root_path+"/res","res")
+
       console.log(data);
         var buf=new Buffer(filename.length)
         buf.write(filename,0)
@@ -91,7 +94,7 @@ service["2000"] = function(data)
           //           if(error) throw error;
           //           sendData(1003,filePath)
           //           sendData(1004,fileData)
-          //      });  
+          //      });
 
           // })
         });
@@ -122,9 +125,9 @@ net.createServer(function(sock) {
         if(fun){
             fun(data);
         }
-        
+
         // console.log("command:"+command+"   data:"+data)
-         
+
 });
 
     // 为这个socket实例添加一个"close"事件处理函数
@@ -133,6 +136,6 @@ net.createServer(function(sock) {
             sock.remoteAddress + ' ' + sock.remotePort);
     });
 
-}).listen(PORT, HOST);
+}).listen(PORT);
 
 console.log('Server listening on ' + HOST +':'+ PORT);
