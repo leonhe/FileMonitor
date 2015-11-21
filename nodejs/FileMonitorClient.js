@@ -107,8 +107,10 @@ tmp["2"]="12323";
 tmp["data"]="dasddsa";
 var jsonstr=JSON.stringify(tmp);
 
-// fileWriteStream.close()
 
+
+//接收到buffer的缓存队列
+var recvie_buffer_cache = [];
 
 // 创建一个TCP服务器实例，调用listen函数开始监听指定端口
 // 传入net.createServer()的回调函数将作为”connection“事件的处理函数
@@ -124,13 +126,33 @@ net.createServer(function(sock) {
         // console.log('DATA ' + sock.remoteAddress + ': ' + data);
         // 回发该数据，客户端将收到来自服务端的数据
         //发送同步文件列表
+        if(recvie_buffer_cache.length>0)
+        {
+            recvie_buffer_cache.push(data);
+            var total_len = 0;
+            for(var i=0;i<recvie_buffer_cache.length;++i)
+            {
+                total_len+=recvie_buffer_cache[i].length;
+            }
+            data = Buffer.concat(recvie_buffer_cache,total_len);
+        }
+
         var offset_val = 0;
         var recvie_data=[]
       while(offset_val<data.length){
 
+        if(offset_val+9>data.length)
+        {
+            recvie_buffer_cache.push(data.length-offset_val);
+            break;
+        }
         var data_len = parseInt((data.slice(offset_val,offset_val+9)).toString("utf8"));
+        if(offset_val+9+data_len>data.length)
+        {
+            recvie_buffer_cache.push(data.slice(offset_val,data.length-offset_val));
+            break;
+        }
         var jsonstr = (data.slice(offset_val+9,offset_val+data_len+9)).toString("utf8");
-
         var json=JSON.parse(jsonstr);
         recvie_data.push(json);
         offset_val+=(data_len+9);
@@ -145,6 +167,8 @@ net.createServer(function(sock) {
                 fun(data);
             }
         });
+
+
         //
         // console.log("command:"+command+"   data:"+data)
 
