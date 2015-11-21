@@ -116,13 +116,23 @@ void FileMonitorClient::getFileList()
 void FileMonitorClient::sendData(std::string &command, const char *buf, ssize_t len)
 {
     char send_buf[1024]={0};
-    memcpy(send_buf,command.c_str(), command.size());
-    memcpy(send_buf+command.size(),buf, len);
+    std::string senddata("{");
+    senddata.append("\"command\":\"");
+    senddata.append(command);
+    senddata.append("\",");
+    senddata.append("\"data\":\"");
+    senddata.append(buf);
+    senddata.append("\"}");
+    
+    len = senddata.size();
+    memset(&send_buf, 0, 2048);
+    memcpy(&send_buf,senddata.c_str(),senddata.size()+1);
+//    memcpy(send_buf+command.size(),buf, len);
     std::cout<<send_buf<<std::endl;
-    len =len+sizeof(int)+1;
+    len =len+1;
     ssize_t send_len=0;
     while (send_len<len) {
-        send_len = send(sokt, send_buf, len, 0);
+        send_len = send(sokt, (&send_buf), len, 0);
         int err = errno;
         if (err>0) {
             std::cout<<("发送消息失败")<<strerror(err)<<std::endl;
@@ -165,7 +175,9 @@ void FileMonitorClient::getFileData()
 //            memcpy(&buf, (void*)(&command), sizeof(int));
 //            memcpy((&buf)+sizeof(int), data.c_str(), data.size());
 //            std::cout<<buf<<std::endl;
-            sendData(command,data.c_str(),data.length()+1);
+            char buf[1024]={0};
+            memcpy(&buf, data.c_str(), data.length());
+            sendData(command,buf,data.length());
         }
     }
     ifs.close();
@@ -190,6 +202,10 @@ void FileMonitorClient::excuteRecvList()
             fs<<data_buf;
             fs.close();
             this->getFileData();
+        }else if(command==1002){
+             std::cout<<"data:"<<data_buf<<std::endl;
+            
+            
         }
         
 //        std::cout<<"command:"<<command<<" data:"<<data_buf<<std::endl;

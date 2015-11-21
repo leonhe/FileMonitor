@@ -92,13 +92,20 @@ service["2000"] = function(data)
 service["2002"] = function(data)
 {
   console.log(data+"\n");
-  fs.readFile(root_path+filename, function (error, fileData) {
+    var filepath = (root_path+data).toString()
+  fs.readFile(filepath, function (error, fileData) {
     if(error) throw error;
       //发送文件的数据
-      // sendData(socket,1002,fileData);
+      sendData(socket,1002,fileData);
   });
 }
 
+
+var tmp={};
+
+tmp["2"]="12323";
+tmp["data"]="dasddsa";
+var jsonstr=JSON.stringify(tmp);
 
 // fileWriteStream.close()
 
@@ -117,9 +124,11 @@ net.createServer(function(sock) {
         // console.log('DATA ' + sock.remoteAddress + ': ' + data);
         // 回发该数据，客户端将收到来自服务端的数据
         //发送同步文件列表
-        var reciv_data = data.toString()
-        var command=reciv_data.substr(0,4)
-        var data = reciv_data.substr(4,reciv_data.length)
+        var jsonstr = data.toString();
+        var json=JSON.parse(data.toString());
+        var reciv_data = data.toJSON();
+        var command=reciv_data.command;
+        var data = reciv_data.data;
         var fun = service[command];
         if(fun){
             fun(data);
