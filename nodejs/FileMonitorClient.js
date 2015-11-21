@@ -124,9 +124,12 @@ net.createServer(function(sock) {
         // console.log('DATA ' + sock.remoteAddress + ': ' + data);
         // 回发该数据，客户端将收到来自服务端的数据
         //发送同步文件列表
-        var jsonstr = data.toString();
-        var json=JSON.parse(data.toString());
-        var reciv_data = data.toJSON();
+        var data_len = parseInt((data.slice(0,9)).toString("utf8"));
+        
+        var jsonstr = (data.slice(0,data.length-1)).toString("utf8");
+
+        var json=JSON.parse(jsonstr);
+        var reciv_data = json;
         var command=reciv_data.command;
         var data = reciv_data.data;
         var fun = service[command];

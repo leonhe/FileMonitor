@@ -115,7 +115,7 @@ void FileMonitorClient::getFileList()
 
 void FileMonitorClient::sendData(std::string &command, const char *buf, ssize_t len)
 {
-    char send_buf[1024]={0};
+//    char send_buf[1024]={0};
     std::string senddata("{");
     senddata.append("\"command\":\"");
     senddata.append(command);
@@ -123,16 +123,19 @@ void FileMonitorClient::sendData(std::string &command, const char *buf, ssize_t 
     senddata.append("\"data\":\"");
     senddata.append(buf);
     senddata.append("\"}");
-    
     len = senddata.size();
-    memset(&send_buf, 0, 2048);
-    memcpy(&send_buf,senddata.c_str(),senddata.size()+1);
+//    memset(&send_buf, 0, 1024);
+//    memcpy(&send_buf,senddata.c_str(),senddata.size());
 //    memcpy(send_buf+command.size(),buf, len);
-    std::cout<<send_buf<<std::endl;
-    len =len+1;
+    std::cout<<senddata<<std::endl;
     ssize_t send_len=0;
+    char bufs[10]={0};
+    sprintf(bufs, "%09lu",senddata.size());
+    std::string buflen(bufs);
+    send(sokt,buflen.c_str(),buflen.size(), 0);
+    
     while (send_len<len) {
-        send_len = send(sokt, (&send_buf), len, 0);
+        send_len = send(sokt, senddata.c_str(), senddata.size()+1, 0);
         int err = errno;
         if (err>0) {
             std::cout<<("发送消息失败")<<strerror(err)<<std::endl;
