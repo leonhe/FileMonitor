@@ -141,10 +141,6 @@ void FileMonitorClient::getFileData()
 //        std::cout<<data<<"data"<<std::endl;
         auto strit = data.find(".");
         if (strit==std::string::npos) {
-            std::cout<<"director"<<std::endl;
-            std::string dir("/Users/yuanfei/workspance/");
-            dir.append(data);
-            
             ssize_t pos=0;
             std::string parent_dir;
             while (pos!=std::string::npos) {
@@ -163,12 +159,13 @@ void FileMonitorClient::getFileData()
 
             }
         }else{
-            int command = 1004;
-        char buf[512];
-        memset(&buf, 0, 512);
-        memcpy(&buf, (void*)(&command), sizeof(int));
-        memcpy((&buf)+sizeof(int), data.c_str(), data.size());
-        std::cout<<buf<<std::endl;
+            std::string command("2002");
+//            char buf[512];
+//            memset(&buf, 0, 512);
+//            memcpy(&buf, (void*)(&command), sizeof(int));
+//            memcpy((&buf)+sizeof(int), data.c_str(), data.size());
+//            std::cout<<buf<<std::endl;
+            sendData(command,data.c_str(),data.length()+1);
         }
     }
     ifs.close();

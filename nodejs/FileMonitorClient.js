@@ -84,20 +84,19 @@ service["2000"] = function(data)
 
         fs.readFile("./"+filename, function (error, fileData) {
           if(error) throw error;
-
+          //发送文件列表文件的数据
           sendData(socket,1001,fileData);
-          // var file_list=String(fileData).split("\n")
-          // // console.log(file_list)
-          // file_list.forEach(function(filePath){
-          //       console.log(root_path+"/"+filePath)
-          //      fs.readFile(root_path+"/"+filePath, function (error, fileData) {
-          //           if(error) throw error;
-          //           sendData(1003,filePath)
-          //           sendData(1004,fileData)
-          //      });
-
-          // })
         });
+}
+//接收到获取单个文件的处理
+service["2002"] = function(data)
+{
+  console.log(data+"\n");
+  fs.readFile(root_path+filename, function (error, fileData) {
+    if(error) throw error;
+      //发送文件的数据
+      // sendData(socket,1002,fileData);
+  });
 }
 
 
@@ -115,7 +114,7 @@ net.createServer(function(sock) {
 
     // 为这个socket实例添加一个"data"事件处理函数
     sock.on('data', function(data) {
-        console.log('DATA ' + sock.remoteAddress + ': ' + data);
+        // console.log('DATA ' + sock.remoteAddress + ': ' + data);
         // 回发该数据，客户端将收到来自服务端的数据
         //发送同步文件列表
         var reciv_data = data.toString()
