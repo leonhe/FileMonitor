@@ -6,4 +6,5 @@ echo "--------------------------------------------"
 echo "NodeJS Vesion:"
 node --version
 
-# node nodejs/FileMonitorClient.js
+node nodejs/FileMonitorClient.js &
+# node nodejs/test.js

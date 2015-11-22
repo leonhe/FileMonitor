@@ -14,6 +14,6 @@ install:FileMonitor
 	mv FileMonitor /usr/local
 
 run:FileMonitor
-	./FileMonitor
+	./FileMonitor 1
 clean:
 	rm FileMonitor FileMonitorClient.o main.o

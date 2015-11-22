@@ -23,7 +23,7 @@ public:
     static FileMonitorClient* getInstance();
     static void destoryInstance();
     bool init();
-    void connect(const char* host,const char* port);
+    void connect(const char* host,const char* port,bool isTest=false);
     
     void getFileList();
     void loopReceiveFile();

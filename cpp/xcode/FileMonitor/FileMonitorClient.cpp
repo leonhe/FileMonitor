@@ -55,7 +55,7 @@ bool FileMonitorClient::init()
 }
 
 
-void FileMonitorClient::connect(const char* host,const char* port)
+void FileMonitorClient::connect(const char* host,const char* port,bool isTest)
 {
     
     struct addrinfo hints;
@@ -87,6 +87,12 @@ void FileMonitorClient::connect(const char* host,const char* port)
     int result= ::connect(sokt, servinfo->ai_addr, servinfo->ai_addrlen);
     if(result!=-1)
     {
+        
+        if (isTest) {
+            const char* buf="close";
+            send(sokt,buf,5, 0);
+            return;
+        }
         close_ = false;
         this->getFileList();
         
