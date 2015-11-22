@@ -1,8 +1,8 @@
 var net = require('net');
 var fs = require("fs")
-
+var os = require("os")
 var PORT = 6969;
-
+console.log(os.hostname())
 var root_path = "test-file/"
 var ignoreFile=[".DS_Store"];
 var filename="allFile.txt"
