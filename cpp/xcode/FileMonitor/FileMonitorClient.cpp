@@ -88,11 +88,14 @@ void FileMonitorClient::connect(const char* host,const char* port,bool isTest)
     if(result!=-1)
     {
         
+        std::cout<<"server connect success!"<<std::endl;
+        
         if (isTest) {
             const char* buf="close";
             send(sokt,buf,5, 0);
             return;
         }
+        
         close_ = false;
         this->getFileList();
         
