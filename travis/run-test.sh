@@ -1,2 +1,3 @@
 #!/usr/bin
-echo "hll"
+make run
+make clean

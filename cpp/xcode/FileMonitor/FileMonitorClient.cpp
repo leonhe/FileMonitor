@@ -87,6 +87,7 @@ void FileMonitorClient::connect(const char* host,const char* port)
     int result= ::connect(sokt, servinfo->ai_addr, servinfo->ai_addrlen);
     if(result!=-1)
     {
+        close_ = false;
         this->getFileList();
         
     }else{
@@ -140,6 +141,7 @@ void FileMonitorClient::sendData(std::string &command, const char *buf, ssize_t 
         int err = errno;
         if (err>0) {
             std::cout<<("发送消息失败")<<strerror(err)<<std::endl;
+            close_=false;
             break;
         }
     }

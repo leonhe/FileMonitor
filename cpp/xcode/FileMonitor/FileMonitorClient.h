@@ -17,7 +17,7 @@
 class FileMonitorClient
 {
 public:
-    FileMonitorClient(){};
+    FileMonitorClient():close_(true){};
     ~FileMonitorClient(){};
     
     static FileMonitorClient* getInstance();
@@ -32,6 +32,8 @@ public:
     
     void sendData(std::string &command,const char* buf,ssize_t len);
     
+   inline bool isClose(){return close_;}
+    
 private:
     static FileMonitorClient* _instance;
     int sokt;
@@ -39,5 +41,6 @@ private:
     std::map<int,char*> reviceList_;
     std::mutex revice_mtx;
     std::string filename;
+    bool close_;
 };
 #endif /* FileMonitorClient_hpp */

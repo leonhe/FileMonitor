@@ -10,10 +10,10 @@ main.o : cpp/xcode/FileMonitor/main.cpp cpp/xcode/FileMonitor/FileMonitorClient.
 FileMonitorClient.o : cpp/xcode/FileMonitor/FileMonitorClient.cpp
 	$(CC) -c cpp/xcode/FileMonitor/FileMonitorClient.cpp
 
-# install:GLMain
-# 	mv GLMain /usr/local
+install:FileMonitor
+	mv FileMonitor /usr/local
 
-# run:GLMain
-# 	./GLMain
+run:FileMonitor
+	./FileMonitor
 clean:
-	rm GLMain GLMain.o
+	rm FileMonitor FileMonitorClient.o main.o
