@@ -9,3 +9,4 @@ os:
 - osx
 notifications:
   email: false
+script: sh travis/run-test.sh
