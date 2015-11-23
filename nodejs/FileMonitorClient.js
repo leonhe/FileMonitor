@@ -63,7 +63,7 @@ function foreachDir(path,dir)
 
             sock.write(command)
             sock.write(buf)
-            sock.write(data)
+            sock.write(data,0,data.length,"binary")
 }
 
 
@@ -75,7 +75,6 @@ var service ={}
 service["2000"] = function(data)
 {
   
-
 	      // console.log(data);
 	        var buf=new Buffer(filename.length)
 	        buf.write(filename,0)
