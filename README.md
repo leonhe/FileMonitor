@@ -8,5 +8,4 @@ This is synchronization remote file test code!!!
 
 Never mind the code details.
 
-Only test code,Don't use in your project!!!
-
+	Note: Only test code,Don't use in your project!!!
