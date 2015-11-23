@@ -180,11 +180,6 @@ void FileMonitorClient::getFileData()
             }
         }else{
             std::string command("2002");
-//            char buf[512];
-//            memset(&buf, 0, 512);
-//            memcpy(&buf, (void*)(&command), sizeof(int));
-//            memcpy((&buf)+sizeof(int), data.c_str(), data.size());
-//            std::cout<<buf<<std::endl;
             char buf[1024]={0};
             memcpy(&buf, data.c_str(), data.length());
             sendData(command,buf,data.length());
@@ -216,23 +211,20 @@ void FileMonitorClient::excuteRecvList()
             
         }else if(command==1002){
             
-            
             char fileName[FILE_NAME_SIZE+1];
             ::memset((&fileName), 0, FILE_NAME_SIZE+1);
             ::memcpy((&fileName), data_buf, FILE_NAME_SIZE);
-//            int res= mkdir(fileName,S_IRWXU);
-//            if (res==-1) {
-//                std::cout<<"mkdir"<<fileName<<" error"<<std::endl;
-//                return;
-//            }
+            
+            //TODO image buffer 
             std::fstream fs;
-            fs.open(fileName,std::fstream::in | std::fstream::out | std::fstream::app);
-            fs<<(data_buf+FILE_NAME_SIZE);
+            fs.open(fileName,std::fstream::out);
+            const char *fileData =data_buf+FILE_NAME_SIZE;
+            ssize_t len =strlen(fileData);//-FILE_NAME_SIZE;
+            char dataBuf[6593];
+            memset(&dataBuf, 0, 6593);
+            memcpy((&dataBuf), fileData, 6593);
+            fs<<dataBuf;
             fs.close();
-
-            
-            
-//             std::cout<<"data:"<<data_buf<<std::endl;
             
             
         }
