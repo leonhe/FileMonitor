@@ -21,7 +21,7 @@ var socket = null;
 
 
 
-function foreachDir(path,dir)
+function foreachDir(fp,path,dir)
 {
   // console.log(path+"/"+dir)
   var abs_path = path+"/"+dir
@@ -35,7 +35,7 @@ function foreachDir(path,dir)
          // 如果是文件夹遍历
            var dir_path = path+"/"+file
            var dir_name = dir+"/"+file
-           fileWriteStream.write(dir_name+"\n");
+           fp.write(dir_name+"\n");
            foreachDir(dir_path,dir_name);
 
      }else{
@@ -45,7 +45,7 @@ function foreachDir(path,dir)
            var p_dir = path+"/"+file
            // console.log(path+"/"+file);
            var file_name = dir+"/"+file
-           fileWriteStream.write(file_name+"\n");
+           fp.write(file_name+"\n");
          }
      }
    })
@@ -73,9 +73,11 @@ var service ={}
 service["2000"] = function(data)
 {
   
+  var fp = fs.open('./'+filename,'w');
 
-  foreachDir(root_path+"/src","src")
-  foreachDir(root_path+"/res","res")
+  foreachDir(fp,root_path+"/src","src")
+  foreachDir(fp,root_path+"/res","res")
+  fp.close()
 
       console.log(data);
         var buf=new Buffer(filename.length)

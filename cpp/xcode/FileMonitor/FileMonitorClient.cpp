@@ -203,12 +203,12 @@ void FileMonitorClient::excuteRecvList()
         if (command==1000)
         {
             std::fstream fs;
-            fs.open(data_buf,std::fstream::in | std::fstream::out);
+            fs.open(data_buf,std::fstream::in | std::fstream::out | std::fstream::app);
             filename=data_buf;
             fs.close();
         }else if (command==1001){
             std::fstream fs;
-            fs.open(filename.c_str(),std::fstream::out | std::fstream::app);
+            fs.open(filename.c_str(),std::fstream::out);
             fs<<data_buf;
             fs.close();
             this->getFileData();
