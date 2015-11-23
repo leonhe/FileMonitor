@@ -7,21 +7,21 @@ var root_path = "test-file/"
 var ignoreFile=[".DS_Store"];
 var filename="allFile.txt"
 
-var fileWriteStream =fs.createWriteStream('./'+filename,{
-  flags: 'w',
-  encoding: 'utf8',
-  mode: 0777
-});;
+var fileWriteStream =null;
 
 var socket = null;
 
 //TODO fs.watch检测改变的文件
 //TODO 匹配文件列表中文件是否有改动然后进行更新文件
 
+		fileWriteStream=fs.createWriteStream('./'+filename,{
+		  flags: 'w',
+		  encoding: 'utf8',
+		  mode: 0777
+		});
 
 
-
-function foreachDir(fp,path,dir)
+function foreachDir(path,dir)
 {
   // console.log(path+"/"+dir)
   var abs_path = path+"/"+dir
@@ -35,7 +35,7 @@ function foreachDir(fp,path,dir)
          // 如果是文件夹遍历
            var dir_path = path+"/"+file
            var dir_name = dir+"/"+file
-           fp.write(dir_name+"\n");
+           fileWriteStream.write(dir_name+"\n");
            foreachDir(dir_path,dir_name);
 
      }else{
@@ -45,7 +45,7 @@ function foreachDir(fp,path,dir)
            var p_dir = path+"/"+file
            // console.log(path+"/"+file);
            var file_name = dir+"/"+file
-           fp.write(file_name+"\n");
+           fileWriteStream.write(file_name+"\n");
          }
      }
    })
@@ -68,28 +68,25 @@ function foreachDir(fp,path,dir)
 
 
 
+foreachDir(root_path+"/src","src")
+foreachDir(root_path+"/res","res")
 
 var service ={}
 service["2000"] = function(data)
 {
   
-  var fp = fs.open('./'+filename,'w');
 
-  foreachDir(fp,root_path+"/src","src")
-  foreachDir(fp,root_path+"/res","res")
-  fp.close()
+	      // console.log(data);
+	        var buf=new Buffer(filename.length)
+	        buf.write(filename,0)
+	        console.log(buf.toString())
+	        sendData(socket,1000,buf);
 
-      console.log(data);
-        var buf=new Buffer(filename.length)
-        buf.write(filename,0)
-        console.log(buf.toString())
-        sendData(socket,1000,buf);
+	        var data=fs.readFileSync("./"+filename);
+	        console.log(data)
+	        sendData(socket,1001,data)
 
-        fs.readFile("./"+filename, function (error, fileData) {
-          if(error) throw error;
-          //发送文件列表文件的数据
-          sendData(socket,1001,fileData);
-        });
+  
 }
 //接收到获取单个文件的处理
 service["2002"] = function(value)
