@@ -68,7 +68,7 @@ function foreachDir(path,dir)
 
 
 
-foreachDir(root_path+"/src","src")
+// foreachDir(root_path+"/src","src")
 foreachDir(root_path+"/res","res")
 
 var service ={}
@@ -99,6 +99,9 @@ service["2002"] = function(value)
     	filename.write(value,0);
     	//file name concat buffer
     	var send_data=Buffer.concat([filename,fileData],fileData.length+512)
+
+    	console.log("file data length: ",fileData.length);
+
       //发送文件的数据w
       sendData(socket,1002,send_data);
   });
