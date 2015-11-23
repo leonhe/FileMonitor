@@ -26,6 +26,7 @@
 FileMonitorClient* FileMonitorClient::_instance = nullptr;
 
 #define MAX_BUFF_SIZE 4096
+#define FILE_NAME_SIZE  512
 
 
 FileMonitorClient* FileMonitorClient::getInstance()
@@ -111,13 +112,7 @@ void FileMonitorClient::getFileList()
 {
     _receiveThread = std::thread(std::bind( &FileMonitorClient::loopReceiveFile, this));
     _receiveThread.detach();
-//    CCLOG("DSA");
     const char buf[]="Hello";
-//   ssize_t len=send(sokt, buf, strlen(buf),0);
-//    if (len==-1) {
-//        std::cout<<("发送消息失败")<<std::endl;
-//        return;
-//    }
     ssize_t len = strlen(buf);
     std::string command = "2000";
     this->sendData(command,buf, len);
@@ -208,22 +203,39 @@ void FileMonitorClient::excuteRecvList()
         if (command==1000)
         {
             std::fstream fs;
-            fs.open(data_buf,std::fstream::in | std::fstream::out | std::fstream::app);
+            fs.open(data_buf,std::fstream::in | std::fstream::out);
             filename=data_buf;
             fs.close();
         }else if (command==1001){
             std::fstream fs;
-            fs.open(filename.c_str(),std::fstream::in | std::fstream::out | std::fstream::app);
+            fs.open(filename.c_str(),std::fstream::out | std::fstream::app);
             fs<<data_buf;
             fs.close();
             this->getFileData();
         }else if(command==1002){
-             std::cout<<"data:"<<data_buf<<std::endl;
+            
+            
+            char fileName[FILE_NAME_SIZE+1];
+            ::memset((&fileName), 0, FILE_NAME_SIZE+1);
+            ::memcpy((&fileName), data_buf, FILE_NAME_SIZE);
+//            int res= mkdir(fileName,S_IRWXU);
+//            if (res==-1) {
+//                std::cout<<"mkdir"<<fileName<<" error"<<std::endl;
+//                return;
+//            }
+            std::fstream fs;
+            fs.open(fileName,std::fstream::in | std::fstream::out | std::fstream::app);
+            fs<<(data_buf+FILE_NAME_SIZE);
+            fs.close();
+
+            
+            
+//             std::cout<<"data:"<<data_buf<<std::endl;
             
             
         }
         
-//        std::cout<<"command:"<<command<<" data:"<<data_buf<<std::endl;
+        std::cout<<"command:"<<command<<" data:"<<data_buf<<std::endl;
         delete [] data_buf;
         data_buf=nullptr;
     }

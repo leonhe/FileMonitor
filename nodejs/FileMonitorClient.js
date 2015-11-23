@@ -7,16 +7,18 @@ var root_path = "test-file/"
 var ignoreFile=[".DS_Store"];
 var filename="allFile.txt"
 
-var fileWriteStream = fs.createWriteStream('./'+filename,{
+var fileWriteStream =fs.createWriteStream('./'+filename,{
   flags: 'w',
   encoding: 'utf8',
   mode: 0777
-});
+});;
 
 var socket = null;
 
 //TODO fs.watch检测改变的文件
 //TODO 匹配文件列表中文件是否有改动然后进行更新文件
+
+
 
 
 function foreachDir(path,dir)
@@ -70,6 +72,7 @@ function foreachDir(path,dir)
 var service ={}
 service["2000"] = function(data)
 {
+  
 
   foreachDir(root_path+"/src","src")
   foreachDir(root_path+"/res","res")
@@ -87,23 +90,22 @@ service["2000"] = function(data)
         });
 }
 //接收到获取单个文件的处理
-service["2002"] = function(data)
+service["2002"] = function(value)
 {
-  console.log(data+"\n");
-    var filepath = (root_path+data).toString()
+  console.log(value+"\n");
+    var filepath = (root_path+value).toString()
   fs.readFile(filepath, function (error, fileData) {
     if(error) throw error;
+    	var filename=new Buffer(512);
+    	filename.fill(0,512);
+    	filename.write(value,0);
+    	//file name concat buffer
+    	var send_data=Buffer.concat([filename,fileData],fileData.length+512)
       //发送文件的数据w
-      sendData(socket,1002,fileData);
+      sendData(socket,1002,send_data);
   });
 }
 
-
-var tmp={};
-
-tmp["2"]="12323";
-tmp["data"]="dasddsa";
-var jsonstr=JSON.stringify(tmp);
 
 // fileWriteStream.close()
 
