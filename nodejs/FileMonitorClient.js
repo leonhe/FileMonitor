@@ -108,6 +108,17 @@ service["2000"] = function(data)
 	        console.log(data)
 	        sendData(socket,1001,data)
 
+          //watch src director change file
+          fs.watch(root_path+"/src",function(event,filename){
+
+              console.log("event:"+event+" filename:"+filename)
+              if(event=="change")
+              {
+                service["2002"]("src/"+filename);
+              }
+
+          })
+
   
 }
 //接收到获取单个文件的处理
