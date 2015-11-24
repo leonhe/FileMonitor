@@ -67,6 +67,29 @@ function foreachDir(path,dir)
 }
 
 
+//need send file buffer data
+function readFileBuffer(file_name,file_buffer)
+{ 
+   var filename_len=new Buffer(4);
+          filename_len.writeInt32LE(String(file_name.length),0)
+
+
+      var filename=new Buffer(file_name.length);
+          filename.write(file_name,0);
+
+      var buf_len = new Buffer(4)
+          buf_len.writeInt32LE(String(file_buffer.length),0)
+            // console.log("send data length:"+data.length);
+
+      //file name concat buffer
+      var send_data=Buffer.concat([filename_len,filename,buf_len,file_buffer],
+        file_buffer.length+file_name.length+buf_len.length+filename_len.length)
+      return send_data;
+
+}
+
+
+
 
 foreachDir(root_path+"/src","src")
 foreachDir(root_path+"/res","res")
@@ -90,30 +113,12 @@ service["2000"] = function(data)
 //接收到获取单个文件的处理
 service["2002"] = function(value)
 {
-  // console.log(value+"\n");
     var filepath = (root_path+value).toString()
 
     var data=fs.readFile(filepath,function(erro,data){
           if(erro) throw erro;
-           console.log(data)
-
-      var filename_len=new Buffer(4);
-          filename_len.writeInt32LE(String(value.length),0)
-
-
-      var filename=new Buffer(value.length);
-          filename.write(value,0);
-
-      var buf_len = new Buffer(4)
-            buf_len.writeInt32LE(String(data.length),0)
-            // console.log("send data length:"+data.length);
-
-      //file name concat buffer
-      var send_data=Buffer.concat([filename_len,filename,buf_len,data],
-        data.length+value.length+buf_len.length+filename_len.length)
-
-      // console.log("file data length: ",data.length);
-      //发送文件的数据w
+     
+      var send_data = readFileBuffer(value,data)
       sendData(socket,1002,send_data);
 
     });

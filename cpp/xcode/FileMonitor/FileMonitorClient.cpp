@@ -205,8 +205,9 @@ void FileMonitorClient::excuteRecvList()
             std::fstream fs;
             fs.open(filename.c_str(),std::fstream::out);
             fs<<data_buf;
+            fs.flush();
             fs.close();
-             std::cout<<"command:"<<command<<" data:"<<data_buf<<std::endl;
+//             std::cout<<"command:"<<command<<" data:"<<data_buf<<std::endl;
             this->getFileData();
             
         }else if(command==1002){
