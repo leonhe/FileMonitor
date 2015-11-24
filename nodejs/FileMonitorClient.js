@@ -11,8 +11,6 @@ var fileWriteStream =null;
 
 var socket = null;
 
-//TODO fs.watch检测改变的文件
-//TODO 匹配文件列表中文件是否有改动然后进行更新文件
 
 		fileWriteStream=fs.createWriteStream('./'+filename,{
 		  flags: 'w',
@@ -110,7 +108,6 @@ service["2000"] = function(data)
 
           //watch src director change file
           fs.watch(root_path+"/src",function(event,filename){
-
               console.log("event:"+event+" filename:"+filename)
               if(event=="change")
               {
@@ -121,7 +118,8 @@ service["2000"] = function(data)
 
   
 }
-//接收到获取单个文件的处理
+
+//recvie file
 service["2002"] = function(value)
 {
     var filepath = (root_path+value).toString()
@@ -138,14 +136,7 @@ service["2002"] = function(value)
 }
 
 
-// fileWriteStream.close()
-
-
-// 创建一个TCP服务器实例，调用listen函数开始监听指定端口
-// 传入net.createServer()的回调函数将作为”connection“事件的处理函数
-// 在每一个“connection”事件中，该回调函数接收到的socket对象是唯一的
 var server=net.createServer(function(sock) {
-    // 我们获得一个连接 - 该连接自动关联一个socket对象
     console.log('CONNECTED: ' +
         sock.remoteAddress + ':' + sock.remotePort);
     socket = sock;
@@ -158,9 +149,7 @@ var server=net.createServer(function(sock) {
           server.close();
           return;
         }
-        // console.log('DATA ' + sock.remoteAddress + ': ' + data);
-        // 回发该数据，客户端将收到来自服务端的数据
-        //发送同步文件列表
+
         var offset_val = 0;
         var recvie_data=[]
       while(offset_val<data.length){
@@ -182,12 +171,10 @@ var server=net.createServer(function(sock) {
                 fun(data);
             }
         });
-        //
-        // console.log("command:"+command+"   data:"+data)
 
 });
 
-    // 为这个socket实例添加一个"close"事件处理函数
+
     sock.on('close', function(data) {
         console.log('CLOSED: ' +
             sock.remoteAddress + ' ' + sock.remotePort);
