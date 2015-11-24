@@ -111,6 +111,21 @@ void FileMonitorClient::getFileList()
     
 }
 
+
+FileMonitorClient::~FileMonitorClient()
+{
+    //clear recive buffer list
+    for(auto it=reviceList_.begin();it!=reviceList_.end();++it)
+    {
+        delete [] (it->second);
+        it->second=nullptr;
+    }
+    reviceList_.clear();
+    this->setClose(true);
+    _receiveThread.join();
+    
+}
+
 void FileMonitorClient::sendData(std::string &command, const char *buf, ssize_t len)
 {
 //    char send_buf[1024]={0};
@@ -237,6 +252,10 @@ void FileMonitorClient::loopReceiveFile()
 {
     while(true)
     {
+        close_mtx_.lock();
+        if (close_) break;
+        close_mtx_.unlock();
+        
         //read command
         int command = 0;
         ssize_t recv_len=recv(sokt, &command, sizeof(int), 0);

@@ -19,7 +19,7 @@ class FileMonitorClient
 {
 public:
     FileMonitorClient():close_(true){};
-    ~FileMonitorClient(){};
+    ~FileMonitorClient();
     
     static FileMonitorClient* getInstance();
     static void destoryInstance();
@@ -34,13 +34,20 @@ public:
     void sendData(std::string &command,const char* buf,ssize_t len);
     
    inline bool isClose(){return close_;}
-    
+private:
+    inline void setClose(bool value)
+    {
+         close_mtx_.lock();
+        close_ = value;
+        close_mtx_.unlock();
+    }
 private:
     static FileMonitorClient* _instance;
     int sokt;
     std::thread _receiveThread;
     std::map<int,char*> reviceList_;
     std::mutex revice_mtx;
+    std::mutex close_mtx_;
     std::string filename;
     bool close_;
 };
