@@ -92,19 +92,30 @@ service["2002"] = function(value)
 {
   console.log(value+"\n");
     var filepath = (root_path+value).toString()
-  fs.readFile(filepath, function (error, fileData) {
-    if(error) throw error;
-    	var filename=new Buffer(512);
-    	filename.fill(0,512);
-    	filename.write(value,0);
-    	//file name concat buffer
-    	var send_data=Buffer.concat([filename,fileData],fileData.length+512)
 
-    	console.log("file data length: ",fileData.length);
+    var rOption = {
+              flags : 'r',
+              encoding : null,
+              mode : 0666
+    }
+
+    var fileReadStream = fs.createReadStream(filepath,rOption);
+    fileReadStream.on('data',function(data){
+          // fileWriteStream.write(data);
+        var filename=new Buffer(512);
+      filename.fill(0,512);
+      filename.write(value,0);
+      //file name concat buffer
+      var send_data=Buffer.concat([filename,data],data.length+512)
+
+      console.log("file data length: ",data.length);
 
       //发送文件的数据w
       sendData(socket,1002,send_data);
-  });
+
+      this.close();
+});
+
 }
 
 
