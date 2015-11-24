@@ -224,14 +224,17 @@ void FileMonitorClient::excuteRecvList()
             
             std::ofstream out;
             out.open(filename,std::ios::binary);
+            delete [] filename;
+            filename = nullptr;
             
             out.write(fileData, len);
             out.flush();
             out.close();
             
+            
         }
         
-        std::cout<<"command:"<<command<<" data:"<<data_buf<<std::endl;
+//        std::cout<<"command:"<<command<<" data:"<<data_buf<<std::endl;
         delete [] data_buf;
         data_buf=nullptr;
     }
