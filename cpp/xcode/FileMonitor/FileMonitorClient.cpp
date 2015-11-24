@@ -211,21 +211,23 @@ void FileMonitorClient::excuteRecvList()
             
         }else if(command==1002){
             
-            char fileName[FILE_NAME_SIZE+1];
-            ::memset((&fileName), 0, FILE_NAME_SIZE+1);
-            ::memcpy((&fileName), data_buf, FILE_NAME_SIZE);
+            ssize_t filename_len=0;
+            memcpy((&filename_len), data_buf, sizeof(int));
             
-            //TODO image buffer 
-            std::fstream fs;
-            fs.open(fileName,std::fstream::out);
-            const char *fileData =data_buf+FILE_NAME_SIZE;
-            ssize_t len =strlen(fileData);//-FILE_NAME_SIZE;
-            char dataBuf[6593];
-            memset(&dataBuf, 0, 6593);
-            memcpy((&dataBuf), fileData, 6593);
-            fs<<dataBuf;
-            fs.close();
+            char *filename = new char[filename_len]{0};
+            memcpy(filename, data_buf+sizeof(int), filename_len);
             
+            const char *fileData =data_buf+sizeof(int)+filename_len+sizeof(int);
+            
+            int len={0};
+            memcpy(&len, data_buf+sizeof(int)+filename_len, 4);
+            
+            std::ofstream out;
+            out.open(filename,std::ios::binary);
+            
+            out.write(fileData, len);
+            out.flush();
+            out.close();
             
         }
         

@@ -102,11 +102,20 @@ service["2002"] = function(value)
     var fileReadStream = fs.createReadStream(filepath,rOption);
     fileReadStream.on('data',function(data){
           // fileWriteStream.write(data);
-        var filename=new Buffer(512);
-      filename.fill(0,512);
-      filename.write(value,0);
+          var filename_len=new Buffer(4);
+          filename_len.writeInt32LE(String(value.length),0)
+
+
+          var filename=new Buffer(value.length);
+          filename.write(value,0);
+
+            var buf_len = new Buffer(4)
+            buf_len.writeInt32LE(String(data.length),0)
+            console.log("send data length:"+data.length);
+
       //file name concat buffer
-      var send_data=Buffer.concat([filename,data],data.length+512)
+      var send_data=Buffer.concat([filename_len,filename,buf_len,data],
+        data.length+value.length+buf_len.length+filename_len.length)
 
       console.log("file data length: ",data.length);
 
