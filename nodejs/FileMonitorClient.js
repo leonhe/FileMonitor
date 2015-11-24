@@ -21,23 +21,20 @@ var socket = null;
 
 function foreachDir(path,dir)
 {
-  // console.log(path+"/"+dir)
   var abs_path = path+"/"+dir
   var file = fs.readdirSync((path))
 
   file.forEach(function(file){
-     // console.log("Foreach:"+path+"/"+file)
-    //  var sub_path = dir+"/"+file
      var stat=fs.statSync(path+"/"+file);
      if(stat.isDirectory()){
-         // 如果是文件夹遍历
+         // dir
            var dir_path = path+"/"+file
            var dir_name = dir+"/"+file
            fileWriteStream.write(dir_name+"\n");
            foreachDir(dir_path,dir_name);
 
      }else{
-         // 读出所有的文件
+         // all file
          if(ignoreFile.indexOf(file)==-1)
          {
            var p_dir = path+"/"+file

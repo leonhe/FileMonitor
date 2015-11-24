@@ -25,9 +25,6 @@
 
 FileMonitorClient* FileMonitorClient::_instance = nullptr;
 
-#define MAX_BUFF_SIZE 4096
-#define FILE_NAME_SIZE  512
-
 
 FileMonitorClient* FileMonitorClient::getInstance()
 {
@@ -68,7 +65,7 @@ void FileMonitorClient::connect(const char* host,const char* port,bool isTest)
     int status = getaddrinfo(host,port, &hints, &servinfo);
     if(status!=0 || servinfo==NULL)
     {
-        std::cout<<"服务器地址信息不正确,请重新确认后连接！"<<std::endl;
+        std::cout<<"server adderss not sure！"<<std::endl;
         return;
     }
     
@@ -79,11 +76,6 @@ void FileMonitorClient::connect(const char* host,const char* port,bool isTest)
         freeaddrinfo(servinfo);
         return;
     }
-    //    fcntl(sokt, F_SETFL,O_NONBLOCK);
-    
-    //    sem_t *my_sem;
-    //    my_sem = sem_open("/myseml", O_CREAT,0664,0);
-    //    sem_init(my_sem, 0, 1);
     
     int result= ::connect(sokt, servinfo->ai_addr, servinfo->ai_addrlen);
     if(result!=-1)
@@ -130,9 +122,6 @@ void FileMonitorClient::sendData(std::string &command, const char *buf, ssize_t 
     senddata.append(buf);
     senddata.append("\"}");
     len = senddata.size();
-//    memset(&send_buf, 0, 1024);
-//    memcpy(&send_buf,senddata.c_str(),senddata.size());
-//    memcpy(send_buf+command.size(),buf, len);
     std::cout<<senddata<<std::endl;
     ssize_t send_len=0;
     char bufs[10]={0};
@@ -144,7 +133,7 @@ void FileMonitorClient::sendData(std::string &command, const char *buf, ssize_t 
         send_len = send(sokt, buflen.c_str(), buflen.size(), 0);
         int err = errno;
         if (err>0) {
-            std::cout<<("发送消息失败")<<strerror(err)<<std::endl;
+            std::cout<<("send packet fail")<<strerror(err)<<std::endl;
             close_=false;
             break;
         }
@@ -248,10 +237,10 @@ void FileMonitorClient::loopReceiveFile()
 {
     while(true)
     {
-        //读取命令
+        //read command
         int command = 0;
         ssize_t recv_len=recv(sokt, &command, sizeof(int), 0);
-        //读取数据长度
+        //read data length
         ssize_t data_size =0;
         recv_len = recv(sokt,(&data_size),sizeof(int),0);
         int er=errno;
@@ -261,7 +250,7 @@ void FileMonitorClient::loopReceiveFile()
         }
         if(!data_size) continue;
         
-        std::cout<<"接收到的包长度:"<<data_size<<std::endl;
+        std::cout<<"recvie packet length:"<<data_size<<std::endl;
         recv_len=0;
         char *buf=new char[data_size+1]{0};
         while (recv_len<data_size)
@@ -273,7 +262,6 @@ void FileMonitorClient::loopReceiveFile()
         revice_mtx.lock();
         reviceList_[command] = buf;
         revice_mtx.unlock();
-//        delete [] buf;
     }
     
 }
