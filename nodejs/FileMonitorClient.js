@@ -31,6 +31,8 @@ function foreachDir(path,dir,f_list)
            var dir_path = path+"/"+file
            var dir_name = dir+"/"+file
            fileWriteStream.write(dir_name+"\n");
+
+         fileListIndex[dir_name]=fileList.length;
             fileList.push({"path":dir_name,"isDir":true});
            foreachDir(dir_path,dir_name);
 
@@ -42,6 +44,7 @@ function foreachDir(path,dir,f_list)
            // console.log(path+"/"+file);
             var file_name = dir+"/"+file
             fileWriteStream.write(file_name+"\n");
+             fileListIndex[file_name]=fileList.length;
             fileList.push({"path":file_name,"isDir":false});
          }
      }
@@ -89,6 +92,7 @@ var fileList=[
              {path:"src",isDir:true},
              {path:"res",isDir:true}
 ];
+var fileListIndex={src:0,res:1};
 
 for(var i=0;i<2;++i)
 {
@@ -105,14 +109,14 @@ service["2000"] = function(data)
 	      // console.log(data);
 	        var buf=new Buffer(filename.length)
 	        buf.write(filename,0)
-	        //console.log(buf.toString())
-	        sendData(socket,1000,buf);
 
-	    var data=JSON.stringify(fileList);
-        sendData(socket,1001,data)
+	       sendData(socket,1000,buf);
+
+           var data=JSON.stringify(fileList);
+           sendData(socket,1001,data)
 
 
-          //watch src director change file
+        //watch src director change file
         for(var i=0;i<fileList.length;++i)
         {
             var file_data = fileList[i];
@@ -131,6 +135,19 @@ service["2000"] = function(data)
                             console.log("update file:"+file_p);
                             service["2002"](file_p);
                         }
+                        if(event=="rename")
+                        {
+                           if(fileListIndex[dir_path_])
+                           {
+                               //delete file
+                               console.log("delete file");
+                               
+                           }else{
+                               //create file
+                               console.log("create file");
+                           }
+                        }
+
                     })
                 }
                 watcher.start();
