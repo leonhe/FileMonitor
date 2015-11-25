@@ -52,5 +52,7 @@ private:
     std::mutex close_mtx_;
     std::string filename;
     bool close_;
+    
+    std::map<std::string,bool> fileList_;
 };
 #endif /* FileMonitorClient_hpp */

@@ -229,7 +229,23 @@ void FileMonitorClient::excuteRecvList()
             fs<<data_buf;
             fs.flush();
             fs.close();
-//             std::cout<<"command:"<<command<<" data:"<<data_buf<<std::endl;
+            
+            rapidjson::Document d;
+            d.Parse(data_buf);
+            if(d.IsArray())
+            {
+                for (auto it = d.Begin(); it!=d.End(); ++it)
+                {
+                    rapidjson::Value &value = (*it);
+                    if (value.IsObject() && value.HasMember("path") &&  value.HasMember("isDir"))
+                    {
+                        fileList_[value["path"].GetString()] = value["isDir"].GetBool();
+                        
+                    }
+                    
+                }
+            }
+            
             this->getFileData();
             
         }else if(command==1002){

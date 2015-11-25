@@ -101,9 +101,10 @@ service["2000"] = function(data)
 	        console.log(buf.toString())
 	        sendData(socket,1000,buf);
 
-	        var data=fs.readFileSync("./"+filename);
-	        console.log(data)
-	        sendData(socket,1001,data)
+	        //var data=fs.readFileSync("./"+filename);
+	        //console.log(data)
+	    var data=JSON.stringify(fileList);
+    sendData(socket,1001,data)
 
           //watch src director change file
           fs.watch(root_path+"/src",function(event,filename){
