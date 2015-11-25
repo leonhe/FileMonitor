@@ -30,7 +30,7 @@ public:
     void getFileList();
     void loopReceiveFile();
     void excuteRecvList();
-    void getFileData();
+    void getFileData(const std::string &path,bool isDir);
     
     void sendData(std::string &command,const char* buf,ssize_t len);
     void sendData(int command,const char* buf,ssize_t len);

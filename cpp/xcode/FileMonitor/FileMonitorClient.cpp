@@ -31,6 +31,7 @@ using namespace std;
 using namespace rapidjson;
 
 
+
 FileMonitorClient* FileMonitorClient::_instance = nullptr;
 
 
@@ -173,41 +174,33 @@ void FileMonitorClient::sendData(int command, const char *buf, ssize_t len)
     }
 }
 
-void FileMonitorClient::getFileData()
+void FileMonitorClient::getFileData(const std::string &path,bool isDir)
 {
-    
-    std::fstream ifs;
-    ifs.open(filename,std::ifstream::in);
-    std::string data;
-    while (getline(ifs,data)) {
-//        std::cout<<data<<"data"<<std::endl;
-        auto strit = data.find(".");
-        if (strit==std::string::npos) {
+
+    if (isDir) {
+      
+            std::string data(path);
             ssize_t pos=0;
             std::string parent_dir;
             while (pos!=std::string::npos) {
                 pos=data.find("/");
                 auto dirnane = data.substr(0,pos);
-                data=data.substr(pos+1,data.size());
-//                std::cout<<"create director:"<<dirnane<<std::endl;
+                data=data.substr(pos+1,path.size());
                 parent_dir.append(dirnane);
-//                if (access(parent_dir.c_str(), R_OK | W_OK)==-1) {
-                    int res= mkdir(parent_dir.c_str(),S_IRWXU);
-                    if (res==-1) {
-                        std::cout<<"mkdir"<<parent_dir<<" error"<<std::endl;
-                    }
-//                }
+                int res= mkdir(parent_dir.c_str(),S_IRWXU);
+                if (res==-1) {
+                    std::cout<<"mkdir"<<dirnane<<" error"<<std::endl;
+                }
                 parent_dir.append("/");
-
             }
-        }else{
-            
-            char buf[1024]={0};
-            memcpy(&buf, data.c_str(), data.length());
-            sendData(2002,buf,data.length());
-        }
+        
+    }else{
+        char buf[1024]={0};
+        memcpy(&buf, path.c_str(), path.length());
+        sendData(2002,buf,path.length());
+
     }
-    ifs.close();
+    
 }
 
 
@@ -239,14 +232,16 @@ void FileMonitorClient::excuteRecvList()
                     rapidjson::Value &value = (*it);
                     if (value.IsObject() && value.HasMember("path") &&  value.HasMember("isDir"))
                     {
-                        fileList_[value["path"].GetString()] = value["isDir"].GetBool();
                         
+                        const std::string &path =value["path"].GetString();
+                        bool isDir =value["isDir"].GetBool();
+                        fileList_[path] =isDir ;
+                        this->getFileData(path,isDir);
                     }
                     
                 }
             }
             
-            this->getFileData();
             
         }else if(command==1002){
             
