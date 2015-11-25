@@ -195,9 +195,7 @@ void FileMonitorClient::getFileData(const std::string &path,bool isDir)
             }
         
     }else{
-        
         sendData(2002,path.c_str(),path.size());
-
     }
     
 }
@@ -244,22 +242,22 @@ void FileMonitorClient::excuteRecvList()
             
         }else if(command==1002){
             
+            //read file name buffer size
             ssize_t filename_len=0;
             memcpy((&filename_len), data_buf, sizeof(int));
-            
+            //read file name string
             char *filename = new char[filename_len]{0};
             memcpy(filename, data_buf+sizeof(int), filename_len);
-            
+            //file content adderss
             const char *fileData =data_buf+sizeof(int)+filename_len+sizeof(int);
-            
+            //file content buffer size
             int len={0};
             memcpy(&len, data_buf+sizeof(int)+filename_len, 4);
-            
+            //write file to local
             std::ofstream out;
             out.open(filename,std::ios::binary);
             delete [] filename;
             filename = nullptr;
-            
             out.write(fileData, len);
             out.flush();
             out.close();

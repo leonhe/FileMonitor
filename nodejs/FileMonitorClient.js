@@ -68,8 +68,7 @@ function foreachDir(path,dir,f_list)
 function readFileBuffer(file_name,file_buffer)
 {
    var filename_len=new Buffer(4);
-          filename_len.writeInt32LE(String(file_name.length),0)
-
+   filename_len.writeInt32LE(String(file_name.length),0)
 
       var filename=new Buffer(file_name.length);
           filename.write(file_name,0);
@@ -92,28 +91,47 @@ foreachDir(root_path+"/src","src",fileList)
 foreachDir(root_path+"/res","res",fileList)
 
 var service ={}
+var watch_list = [];
+
 service["2000"] = function(data)
 {
           if(data!="hello") return;
 	      // console.log(data);
 	        var buf=new Buffer(filename.length)
 	        buf.write(filename,0)
-	        console.log(buf.toString())
+	        //console.log(buf.toString())
 	        sendData(socket,1000,buf);
 
-	        //var data=fs.readFileSync("./"+filename);
-	        //console.log(data)
 	    var data=JSON.stringify(fileList);
-    sendData(socket,1001,data)
+        sendData(socket,1001,data)
+
 
           //watch src director change file
-          fs.watch(root_path+"/src",function(event,filename){
-              console.log("event:"+event+" filename:"+filename)
-              if(event=="change")
-              {
-                service["2002"]("src/"+filename);
-              }
-          })
+        for(var i=0;i<fileList.length;++i)
+        {
+            var file_data = fileList[i];
+            if(file_data.isDir)
+            {
+                var watcher = new Object();
+                var dir_path = file_data.path;
+                watcher.path =dir_path;
+                watcher.start= function(){
+                    var dir_path_ = this.path;
+                    fs.watch(root_path+dir_path_,function(event,filename){
+                        console.log("event:"+event+" filename:"+filename)
+                        if(event=="change")
+                        {
+                            var file_p =dir_path_+"/"+filename;
+                            console.log("update file:"+file_p);
+                            service["2002"](file_p);
+                        }
+                    })
+                }
+                watcher.start();
+                watch_list.push(watcher);
+            }
+        }
+
 
 
 }
