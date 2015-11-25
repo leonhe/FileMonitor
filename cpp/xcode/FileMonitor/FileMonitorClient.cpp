@@ -195,9 +195,8 @@ void FileMonitorClient::getFileData(const std::string &path,bool isDir)
             }
         
     }else{
-        char buf[1024]={0};
-        memcpy(&buf, path.c_str(), path.length());
-        sendData(2002,buf,path.length());
+        
+        sendData(2002,path.c_str(),path.size());
 
     }
     
