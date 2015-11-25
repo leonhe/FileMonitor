@@ -64,7 +64,7 @@ function foreachDir(path,dir)
 
 //need send file buffer data
 function readFileBuffer(file_name,file_buffer)
-{ 
+{
    var filename_len=new Buffer(4);
           filename_len.writeInt32LE(String(file_name.length),0)
 
@@ -92,7 +92,7 @@ foreachDir(root_path+"/res","res")
 var service ={}
 service["2000"] = function(data)
 {
-  
+
 	      // console.log(data);
 	        var buf=new Buffer(filename.length)
 	        buf.write(filename,0)
@@ -113,7 +113,7 @@ service["2000"] = function(data)
 
           })
 
-  
+
 }
 
 //recvie file
@@ -123,12 +123,12 @@ service["2002"] = function(value)
 
     var data=fs.readFile(filepath,function(erro,data){
           if(erro) throw erro;
-     
+
       var send_data = readFileBuffer(value,data)
       sendData(socket,1002,send_data);
 
     });
-         
+
 
 }
 
@@ -140,7 +140,7 @@ var server=net.createServer(function(sock) {
 
     // 为这个socket实例添加一个"data"事件处理函数
     sock.on('data', function(data) {
-      
+
         if(data.toString()=="close")
         {
           server.close();
