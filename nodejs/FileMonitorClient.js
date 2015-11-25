@@ -85,10 +85,16 @@ function readFileBuffer(file_name,file_buffer)
 }
 
 
-var fileList=[];
+var fileList=[
+             {path:"src",isDir:true},
+             {path:"res",isDir:true}
+];
 
-foreachDir(root_path+"/src","src",fileList)
-foreachDir(root_path+"/res","res",fileList)
+for(var i=0;i<2;++i)
+{
+    var dir_name = fileList[i].path;
+    foreachDir(root_path+"/"+dir_name,dir_name,fileList)
+}
 
 var service ={}
 var watch_list = [];

@@ -253,6 +253,8 @@ void FileMonitorClient::excuteRecvList()
             //file content buffer size
             int len={0};
             memcpy(&len, data_buf+sizeof(int)+filename_len, 4);
+            
+            std::cout<<"update file:"<<filename<<std::endl;
             //write file to local
             std::ofstream out;
             out.open(filename,std::ios::binary);
@@ -261,7 +263,6 @@ void FileMonitorClient::excuteRecvList()
             out.write(fileData, len);
             out.flush();
             out.close();
-            
             
         }
         
