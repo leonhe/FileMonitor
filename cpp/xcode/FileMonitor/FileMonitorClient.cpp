@@ -113,7 +113,7 @@ void FileMonitorClient::getFileList()
     _receiveThread = std::thread(std::bind( &FileMonitorClient::loopReceiveFile, this));
     _receiveThread.detach();
     
-    const char buf[]="Hello";
+    const char buf[]="hello";
     ssize_t len = strlen(buf);
 //    std::string command = "2000";
     

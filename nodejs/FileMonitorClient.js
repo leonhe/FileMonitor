@@ -19,7 +19,7 @@ var socket = null;
 		});
 
 
-function foreachDir(path,dir)
+function foreachDir(path,dir,f_list)
 {
   var abs_path = path+"/"+dir
   var file = fs.readdirSync((path))
@@ -31,16 +31,18 @@ function foreachDir(path,dir)
            var dir_path = path+"/"+file
            var dir_name = dir+"/"+file
            fileWriteStream.write(dir_name+"\n");
+            fileList.push({"path":dir_name,"isDir":true});
            foreachDir(dir_path,dir_name);
 
      }else{
          // all file
          if(ignoreFile.indexOf(file)==-1)
          {
-           var p_dir = path+"/"+file
+            var p_dir = path+"/"+file
            // console.log(path+"/"+file);
-           var file_name = dir+"/"+file
-           fileWriteStream.write(file_name+"\n");
+            var file_name = dir+"/"+file
+            fileWriteStream.write(file_name+"\n");
+            fileList.push({"path":file_name,"isDir":false});
          }
      }
    })
@@ -84,15 +86,15 @@ function readFileBuffer(file_name,file_buffer)
 }
 
 
+var fileList=[];
 
-
-foreachDir(root_path+"/src","src")
-foreachDir(root_path+"/res","res")
+foreachDir(root_path+"/src","src",fileList)
+foreachDir(root_path+"/res","res",fileList)
 
 var service ={}
 service["2000"] = function(data)
 {
-
+          if(data!="hello") return;
 	      // console.log(data);
 	        var buf=new Buffer(filename.length)
 	        buf.write(filename,0)
@@ -110,7 +112,6 @@ service["2000"] = function(data)
               {
                 service["2002"]("src/"+filename);
               }
-
           })
 
 
