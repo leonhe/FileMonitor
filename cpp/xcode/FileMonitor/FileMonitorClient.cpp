@@ -23,6 +23,9 @@
 #include <sys/stat.h>
 #include <sys/unistd.h>
 
+#include "rapidjson/document.h"
+
+
 FileMonitorClient* FileMonitorClient::_instance = nullptr;
 
 
@@ -104,6 +107,9 @@ void FileMonitorClient::getFileList()
 {
     _receiveThread = std::thread(std::bind( &FileMonitorClient::loopReceiveFile, this));
     _receiveThread.detach();
+    
+    
+    
     const char buf[]="Hello";
     ssize_t len = strlen(buf);
     std::string command = "2000";
@@ -128,6 +134,7 @@ FileMonitorClient::~FileMonitorClient()
 
 void FileMonitorClient::sendData(std::string &command, const char *buf, ssize_t len)
 {
+    
 //    char send_buf[1024]={0};
     std::string senddata("{");
     senddata.append("\"command\":\"");

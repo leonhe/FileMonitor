@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4640D6871BF838C20090F0F3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4640D6861BF838C20090F0F3 /* main.cpp */; };
-		C061EE941BFF650B00B2A55A /* FileMonitorClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C061EE921BFF650B00B2A55A /* FileMonitorClient.cpp */; settings = {ASSET_TAGS = (); }; };
+		C061EE941BFF650B00B2A55A /* FileMonitorClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C061EE921BFF650B00B2A55A /* FileMonitorClient.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -171,6 +171,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../external/json/include";
 			};
 			name = Debug;
 		};
@@ -207,6 +208,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
+				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../external/json/include";
 			};
 			name = Release;
 		};
