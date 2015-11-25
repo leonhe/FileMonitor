@@ -11,3 +11,5 @@ notifications:
   email: false
 before_install: sh travis/before-install.sh
 script: sh travis/run-test.sh
+before_install:
+  - git submodule update --init --recursive
