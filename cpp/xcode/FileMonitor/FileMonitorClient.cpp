@@ -24,6 +24,11 @@
 #include <sys/unistd.h>
 
 #include "rapidjson/document.h"
+#include "rapidjson/writer.h"
+#include "rapidjson/stringbuffer.h"
+
+using namespace std;
+using namespace rapidjson;
 
 
 FileMonitorClient* FileMonitorClient::_instance = nullptr;
@@ -108,12 +113,11 @@ void FileMonitorClient::getFileList()
     _receiveThread = std::thread(std::bind( &FileMonitorClient::loopReceiveFile, this));
     _receiveThread.detach();
     
-    
-    
     const char buf[]="Hello";
     ssize_t len = strlen(buf);
-    std::string command = "2000";
-    this->sendData(command,buf, len);
+//    std::string command = "2000";
+    
+    this->sendData(2000,buf, len);
     
 }
 
@@ -132,17 +136,24 @@ FileMonitorClient::~FileMonitorClient()
     
 }
 
-void FileMonitorClient::sendData(std::string &command, const char *buf, ssize_t len)
+
+void FileMonitorClient::sendData(int command, const char *buf, ssize_t len)
 {
     
-//    char send_buf[1024]={0};
-    std::string senddata("{");
-    senddata.append("\"command\":\"");
-    senddata.append(command);
-    senddata.append("\",");
-    senddata.append("\"data\":\"");
-    senddata.append(buf);
-    senddata.append("\"}");
+    
+    Document d;
+    d.SetObject();
+    
+    rapidjson::Value data;
+    data.SetString(buf, (SizeType)len);
+    d.AddMember("command", command, d.GetAllocator());
+    d.AddMember("data", data, d.GetAllocator());
+    
+    StringBuffer buffer;
+    Writer<StringBuffer> writer(buffer);
+    d.Accept(writer);
+    
+    std::string senddata = buffer.GetString();
     len = senddata.size();
     std::cout<<senddata<<std::endl;
     ssize_t send_len=0;
@@ -190,10 +201,10 @@ void FileMonitorClient::getFileData()
 
             }
         }else{
-            std::string command("2002");
+            
             char buf[1024]={0};
             memcpy(&buf, data.c_str(), data.length());
-            sendData(command,buf,data.length());
+            sendData(2002,buf,data.length());
         }
     }
     ifs.close();

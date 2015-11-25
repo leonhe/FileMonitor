@@ -33,6 +33,7 @@ public:
     void getFileData();
     
     void sendData(std::string &command,const char* buf,ssize_t len);
+    void sendData(int command,const char* buf,ssize_t len);
     
    inline bool isClose(){return close_;}
 private:
