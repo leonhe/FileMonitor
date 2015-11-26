@@ -1,6 +1,7 @@
 src/main.lua
 src/model
 src/model/test.lua
+src/s.lua
 res/01.png
 res/lo
 res/lo/photo.jpg

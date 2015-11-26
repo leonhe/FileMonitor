@@ -246,7 +246,8 @@ void FileMonitorClient::excuteRecvList()
             ssize_t filename_len=0;
             memcpy((&filename_len), data_buf, sizeof(int));
             //read file name string
-            char *filename = new char[filename_len]{0};
+            char *filename = new char[filename_len+1]();
+            memset(filename, 0, filename_len+1);
             memcpy(filename, data_buf+sizeof(int), filename_len);
             //file content adderss
             const char *fileData =data_buf+sizeof(int)+filename_len+sizeof(int);

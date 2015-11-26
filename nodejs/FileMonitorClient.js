@@ -80,10 +80,12 @@ function readFileBuffer(file_name,file_buffer)
           buf_len.writeInt32LE(String(file_buffer.length),0)
             // console.log("send data length:"+data.length);
 
+
       //file name concat buffer
       var send_data=Buffer.concat([filename_len,filename,buf_len,file_buffer],
         file_buffer.length+file_name.length+buf_len.length+filename_len.length)
-      return send_data;
+
+    return send_data;
 
 }
 
@@ -129,22 +131,26 @@ service["2000"] = function(data)
                     var dir_path_ = this.path;
                     fs.watch(root_path+dir_path_,function(event,filename){
                         console.log("event:"+event+" filename:"+filename)
+                        //file path
+                        var file_p =dir_path_+"/"+filename;
                         if(event=="change")
                         {
-                            var file_p =dir_path_+"/"+filename;
+
                             console.log("update file:"+file_p);
                             service["2002"](file_p);
                         }
                         if(event=="rename")
                         {
-                           if(fileListIndex[dir_path_])
+                           if(fileListIndex[file_p])
                            {
                                //delete file
                                console.log("delete file");
-                               
+
+
                            }else{
                                //create file
                                console.log("create file");
+
                            }
                         }
 
