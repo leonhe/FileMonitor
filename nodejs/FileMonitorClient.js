@@ -145,12 +145,15 @@ service["2000"] = function(data)
                            {
                                //delete file
                                console.log("delete file");
+                               service["2003"](file_p);
+                               fileListIndex[file_p]=null;
 
 
                            }else{
                                //create file
                                console.log("create file");
-
+                               service["2002"](file_p);
+                               fileListIndex[file_p] = true;
                            }
                         }
 
@@ -180,6 +183,14 @@ service["2002"] = function(value)
 
 
 }
+//delete file
+service["2003"] = function(value)
+{
+    var  send_data = new Object();
+    send_data.file = value;
+    sendData(socket,1003,send_data);
+}
+
 
 
 var server=net.createServer(function(sock) {

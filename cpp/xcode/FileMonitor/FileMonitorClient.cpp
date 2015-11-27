@@ -265,6 +265,19 @@ void FileMonitorClient::excuteRecvList()
             out.flush();
             out.close();
             
+        }else if(command==1003){
+            //delete client file
+            rapidjson::Document d;
+            d.Parse(data_buf);
+            const char *KEY = "file";
+            if(d.IsObject() && d.HasMember(KEY))
+            {
+                const std::string &file_path=d[KEY].GetString();
+                
+                
+            }
+            
+            
         }
         
 //        std::cout<<"command:"<<command<<" data:"<<data_buf<<std::endl;
