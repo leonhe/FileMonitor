@@ -22,7 +22,7 @@
 #include <sys/dir.h>
 #include <sys/stat.h>
 #include <sys/unistd.h>
-
+#include <cstdio>
 #include "rapidjson/document.h"
 #include "rapidjson/writer.h"
 #include "rapidjson/stringbuffer.h"
@@ -273,7 +273,10 @@ void FileMonitorClient::excuteRecvList()
             if(d.IsObject() && d.HasMember(KEY))
             {
                 const std::string &file_path=d[KEY].GetString();
-                
+                if( ::remove(file_path.c_str()) != 0 )
+                    perror( "Error deleting file" );
+                else
+                    std::cout<<"File successfully deleted"<<std::endl;
                 
             }
             
