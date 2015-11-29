@@ -2,6 +2,7 @@ var net = require('net');
 var fs = require("fs")
 var os = require("os")
 var chokidar = require('chokidar');
+var serveice = require("./services");
 
 var PORT = 6969;
 console.log(os.hostname())
@@ -208,6 +209,7 @@ service["2003"] = function(value)
 
 
 var server=net.createServer(function(sock) {
+    serveice.setSocket(sock);
     console.log('CONNECTED: ' +
         sock.remoteAddress + ':' + sock.remotePort);
     socket = sock;
