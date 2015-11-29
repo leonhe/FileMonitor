@@ -2,7 +2,7 @@ var net = require('net');
 var fs = require("fs")
 var os = require("os")
 var chokidar = require('chokidar');
-var Services = require("./lib/service/main");
+var Services = require("./lib/service/");
 
 var PORT = 6969;
 console.log(os.hostname())
