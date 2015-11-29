@@ -36,6 +36,7 @@ public:
     void sendData(int command,const char* buf,ssize_t len);
     
    inline bool isClose(){return close_;}
+    
 private:
     inline void setClose(bool value)
     {

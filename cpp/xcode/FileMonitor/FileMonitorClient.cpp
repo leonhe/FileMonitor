@@ -278,7 +278,6 @@ void FileMonitorClient::excuteRecvList()
                 else
                     std::cout<<"File:["<<file_path<<"] successfully deleted"<<std::endl;
                 
-                
             }
             
             
