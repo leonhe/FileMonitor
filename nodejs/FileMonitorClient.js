@@ -144,11 +144,10 @@ service["2000"] = function(data)
                            if(fileListIndex[file_p])
                            {
                                //delete file
-                               console.log("delete file");
                                service["2003"](file_p);
-                               fileListIndex[file_p]=null;
-
-
+                               //fileListIndex[file_p]=null;
+                               delete fileListIndex[file_p];
+                               console.log("delete file"+file_p);
                            }else{
                                //create file
                                console.log("create file");
