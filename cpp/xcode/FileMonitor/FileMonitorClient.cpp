@@ -276,7 +276,8 @@ void FileMonitorClient::excuteRecvList()
                 if( ::remove(file_path.c_str()) != 0 )
                     perror( "Error deleting file" );
                 else
-                    std::cout<<"File successfully deleted"<<std::endl;
+                    std::cout<<"File:["<<file_path<<"] successfully deleted"<<std::endl;
+                
                 
             }
             

@@ -188,7 +188,8 @@ service["2003"] = function(value)
 {
     var  send_data = new Object();
     send_data.file = value;
-    sendData(socket,1003,send_data);
+    var del_data=JSON.stringify(send_data);
+    sendData(socket,1003,del_data);
 }
 
 
