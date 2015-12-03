@@ -219,14 +219,13 @@ service["2003"] = function(value)
 var clienter = {};
 var server=net.createServer(function(sock) {
 
-    var client = new Client(sock);
-    var key = client.getKey();
+    var client = new Client(sock,clienter);
+    client.init();
+    //clienter[key] = client;
 
-    clienter[key] = client;
-
-    console.log('CONNECTED: ' +
-        sock.remoteAddress + ':' + sock.remotePort);
-    socket = sock;
+    //console.log('CONNECTED: ' +
+    //    sock.remoteAddress + ':' + sock.remotePort);
+    //socket = sock;
 
     // 为这个socket实例添加一个"data"事件处理函数
     sock.on('data', function(data) {
@@ -262,13 +261,13 @@ var server=net.createServer(function(sock) {
 });
 
 
-    sock.on('close', function(data) {
-        var key = (this.remoteAddress+":"+this.remotePort).toString();
-        clienter[key]=null;
-        delete clienter[key];
-        console.log('CLOSED: ' +
-            sock.remoteAddress + ' ' + sock.remotePort);
-    });
+    //sock.on('close', function(data) {
+    //    var key = (this.remoteAddress+":"+this.remotePort).toString();
+    //    clienter[key]=null;
+    //    delete clienter[key];
+    //    console.log('CLOSED: ' +
+    //        sock.remoteAddress + ' ' + sock.remotePort);
+    //});
 
 }).listen(PORT);
 
