@@ -4,6 +4,10 @@ var os = require("os")
 var chokidar = require('chokidar');
 var Services = require("./lib/service/");
 
+var AsynFileManager = require("./AsynFileManger");
+
+
+
 var PORT = 6969;
 console.log(os.hostname())
 var root_path = "test-file/"
@@ -110,6 +114,7 @@ for(var i=0;i<2;++i)
 
     chokidar.watch(root_path+"/"+dir_name, {ignored: /[\/\\]\./}).on('all', function(event, path) {
         console.log(event, path);
+
     });
 }
 
