@@ -1,10 +1,9 @@
 var net = require('net');
 var fs = require("fs")
 var os = require("os")
-var chokidar = require('chokidar');
-var Services = require("./lib/service/");
 
-var AsynFileManager = require("./AsynFileManger");
+var Client = require("./lib/Client");
+var AsynFileManager = require("./lib/AsynFileManger");
 
 
 
@@ -124,6 +123,7 @@ file_asyn.addWatchDir("src");
 file_asyn.addWatchDir("res");
 file_asyn.watch();
 
+
 service["2000"] = function(data)
 {
           if(data!="hello") return;
@@ -216,10 +216,11 @@ service["2003"] = function(value)
 
 
 
-
+var client = [];
 var server=net.createServer(function(sock) {
 
-    Services.setSocket(sock);
+    var client = new Client(sock);
+    client.push(client);
 
     console.log('CONNECTED: ' +
         sock.remoteAddress + ':' + sock.remotePort);
