@@ -211,63 +211,13 @@ service["2003"] = function(value)
     sendData(socket,1003,del_data);
 }
 
-
-
-
-
-
 var clienter = {};
 var server=net.createServer(function(sock) {
 
     var client = new Client(sock,clienter);
     client.init();
-    //clienter[key] = client;
-
-    //console.log('CONNECTED: ' +
-    //    sock.remoteAddress + ':' + sock.remotePort);
-    //socket = sock;
-
-    // 为这个socket实例添加一个"data"事件处理函数
-    sock.on('data', function(data) {
-
-        if(data.toString()=="close")
-        {
-          server.close();
-          return;
-        }
-
-      //  var offset_val = 0;
-      //  var recvie_data=[]
-      //while(offset_val<data.length){
-      //
-      //  var data_len = parseInt((data.slice(offset_val,offset_val+9)).toString("utf8"));
-      //  var jsonstr = (data.slice(offset_val+9,offset_val+data_len+9)).toString("utf8");
-      //
-      //  var json=JSON.parse(jsonstr);
-      //  recvie_data.push(json);
-      //  offset_val+=(data_len+9);
-      //}
-      //
-      //  recvie_data.forEach(function(value){
-      //
-      //      var command=value.command;
-      //      var data = value.data;
-      //      var fun = service[command];
-      //      if(fun){
-      //          fun(data);
-      //      }
-      //  });
-
-});
-
-
-    //sock.on('close', function(data) {
-    //    var key = (this.remoteAddress+":"+this.remotePort).toString();
-    //    clienter[key]=null;
-    //    delete clienter[key];
-    //    console.log('CLOSED: ' +
-    //        sock.remoteAddress + ' ' + sock.remotePort);
-    //});
+    console.log('CONNECTED: ' +
+        sock.remoteAddress + ':' + sock.remotePort);
 
 }).listen(PORT);
 
