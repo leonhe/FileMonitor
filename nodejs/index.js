@@ -107,18 +107,22 @@ var fileList=[
 ];
 var fileListIndex={src:0,res:1};
 
-for(var i=0;i<2;++i)
-{
-    var dir_name = fileList[i].path;
-    foreachDir(root_path+"/"+dir_name,dir_name,fileList)
+//for(var i=0;i<2;++i)
+//{
+//    var dir_name = fileList[i].path;
+//    foreachDir(root_path+"/"+dir_name,dir_name,fileList)
+//
+//    chokidar.watch(root_path+"/"+dir_name, {ignored: /[\/\\]\./}).on('all', function(event, path) {
+//        console.log(event, path);
+//
+//    });
+//}
 
-    chokidar.watch(root_path+"/"+dir_name, {ignored: /[\/\\]\./}).on('all', function(event, path) {
-        console.log(event, path);
 
-    });
-}
-
-
+var file_asyn = new AsynFileManager(root_path);
+file_asyn.addWatchDir("src");
+file_asyn.addWatchDir("res");
+file_asyn.watch();
 
 service["2000"] = function(data)
 {
