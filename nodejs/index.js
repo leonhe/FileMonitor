@@ -216,11 +216,13 @@ service["2003"] = function(value)
 
 
 
-var client = [];
+var clienter = {};
 var server=net.createServer(function(sock) {
 
     var client = new Client(sock);
-    client.push(client);
+    var key = client.getKey();
+
+    clienter[key] = client;
 
     console.log('CONNECTED: ' +
         sock.remoteAddress + ':' + sock.remotePort);
@@ -235,32 +237,35 @@ var server=net.createServer(function(sock) {
           return;
         }
 
-        var offset_val = 0;
-        var recvie_data=[]
-      while(offset_val<data.length){
-
-        var data_len = parseInt((data.slice(offset_val,offset_val+9)).toString("utf8"));
-        var jsonstr = (data.slice(offset_val+9,offset_val+data_len+9)).toString("utf8");
-
-        var json=JSON.parse(jsonstr);
-        recvie_data.push(json);
-        offset_val+=(data_len+9);
-      }
-
-        recvie_data.forEach(function(value){
-
-            var command=value.command;
-            var data = value.data;
-            var fun = service[command];
-            if(fun){
-                fun(data);
-            }
-        });
+      //  var offset_val = 0;
+      //  var recvie_data=[]
+      //while(offset_val<data.length){
+      //
+      //  var data_len = parseInt((data.slice(offset_val,offset_val+9)).toString("utf8"));
+      //  var jsonstr = (data.slice(offset_val+9,offset_val+data_len+9)).toString("utf8");
+      //
+      //  var json=JSON.parse(jsonstr);
+      //  recvie_data.push(json);
+      //  offset_val+=(data_len+9);
+      //}
+      //
+      //  recvie_data.forEach(function(value){
+      //
+      //      var command=value.command;
+      //      var data = value.data;
+      //      var fun = service[command];
+      //      if(fun){
+      //          fun(data);
+      //      }
+      //  });
 
 });
 
 
     sock.on('close', function(data) {
+        var key = (this.remoteAddress+":"+this.remotePort).toString();
+        clienter[key]=null;
+        delete clienter[key];
         console.log('CLOSED: ' +
             sock.remoteAddress + ' ' + sock.remotePort);
     });
