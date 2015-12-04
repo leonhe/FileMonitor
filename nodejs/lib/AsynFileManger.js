@@ -10,6 +10,8 @@ var AsynFileManger= function(rootPath){
     this._fileListIndex={};
     this._watchDirList = [];
 
+
+
 };
 
 AsynFileManger.prototype.deleteFileList= function (value) {
@@ -60,7 +62,7 @@ AsynFileManger.prototype.watch = function()
     var self = this;
     this._watchDirList.forEach(function(value){
 
-        chokidar.watch(self._rootPath+value, {ignored: /[\/\\]\./}).on('all', function(event, path) {
+        chokidar.watch(self._rootPath, {ignored: /[\/\\]\./}).on('all', function(event, path) {
             console.log(event, path);
             var act = self[event];
             if(act)
