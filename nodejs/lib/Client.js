@@ -73,4 +73,28 @@ Client.prototype.close = function(data)
 }
 
 
+
+//need send file buffer data
+Client.prototype.readFileBuffer=function(file_name,file_buffer)
+{
+    var filename_len=new Buffer(4);
+    filename_len.writeInt32LE(String(file_name.length),0)
+
+    var filename=new Buffer(file_name.length);
+    filename.write(file_name,0);
+
+    var buf_len = new Buffer(4)
+    buf_len.writeInt32LE(String(file_buffer.length),0)
+    // console.log("send data length:"+data.length);
+
+    //file name concat buffer
+    var send_data=Buffer.concat([filename_len,filename,buf_len,file_buffer],
+        file_buffer.length+file_name.length+buf_len.length+filename_len.length)
+
+    return send_data;
+
+}
+
+
+
 module.exports = Client;
