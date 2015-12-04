@@ -113,4 +113,9 @@ Client.prototype.sendData=function(command_value,data)
 
 
 
+Client.prototype.update = function(data)
+{
+
+}
+
 module.exports = Client;

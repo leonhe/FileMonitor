@@ -8,10 +8,8 @@ var AsynFileManger= function(rootPath){
     this._rootPath = rootPath;
     this._fileList = [];
     this._fileListIndex={};
-    this._watchDirList = [];
-
-
-
+    this._observer = [];
+    this._observerIndex = {};
 };
 
 AsynFileManger.prototype.deleteFileList= function (value) {
@@ -22,10 +20,28 @@ AsynFileManger.prototype.deleteFileList= function (value) {
         delete this._fileListIndex[value]
 }
 
-AsynFileManger.prototype.addWatchDir=function(value)
+AsynFileManger.prototype.addObserver=function(value)
 {
-   this._watchDirList.push(value);
+    this._observerIndex[value.getKey()] = this._observer.length;
+   this._observer.push(value);
 };
+
+AsynFileManger.prototype.removeObserver = function(value)
+{
+    var key = value.getKey()
+    var index = this._observerIndex[key]
+    if(index<0) return;
+    this._observer.splice(index,1);
+    this._observerIndex[key]=-1;
+    delete this._observerIndex[key];
+}
+
+AsynFileManger.prototype.update=function(data)
+{
+    this._observer.forEach(function(client){
+        client.update(data);
+    });
+}
 
 //add directory
 AsynFileManger.prototype.addDir=function(value)

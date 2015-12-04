@@ -15,13 +15,12 @@ var file_asyn = new AsynFileManager(root_path);
 file_asyn.watch();
 
 
-
-
 var clienter = {};
 var server=net.createServer(function(sock) {
 
     var client = new Client(sock,clienter);
     client.init();
+    file_asyn.addObserver(client);
     console.log('CONNECTED: ' +
         sock.remoteAddress + ':' + sock.remotePort);
 
