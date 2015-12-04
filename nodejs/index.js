@@ -57,20 +57,7 @@ function foreachDir(path,dir,f_list)
    })
 }
 
- function sendData(sock,command_value,data)
-{
-            var command = new Buffer(4)
-            command.writeInt32LE(String(command_value),0)
-            console.log(command.readInt32LE())
 
-            var buf = new Buffer(4)
-            buf.writeInt32LE(String(data.length),0)
-            console.log(buf.readInt32LE())
-
-            sock.write(command)
-            sock.write(buf)
-            sock.write(data,0,data.length,"binary")
-}
 
 
 

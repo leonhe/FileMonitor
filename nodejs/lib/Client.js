@@ -72,8 +72,6 @@ Client.prototype.close = function(data)
         this._sokt.remoteAddress + ' ' + this._sokt.remotePort);
 }
 
-
-
 //need send file buffer data
 Client.prototype.readFileBuffer=function(file_name,file_buffer)
 {
@@ -93,6 +91,21 @@ Client.prototype.readFileBuffer=function(file_name,file_buffer)
 
     return send_data;
 
+}
+//send data
+Client.prototype.sendData=function(command_value,data)
+{
+    var command = new Buffer(4)
+    command.writeInt32LE(String(command_value),0)
+    console.log(command.readInt32LE())
+
+    var buf = new Buffer(4)
+    buf.writeInt32LE(String(data.length),0)
+    console.log(buf.readInt32LE())
+
+    this._sokt.write(command)
+    this._sokt.write(buf)
+    this._sokt.write(data,0,data.length,"binary")
 }
 
 
