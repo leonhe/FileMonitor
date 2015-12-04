@@ -1,9 +1,15 @@
 /**
  * Created by yuanfei on 15/12/3.
  */
+
+
+var ServicesDecode = require("./ServicesDecode")
+
 var Client=function(service,client_list)
 {
+
     this._sokt =service;
+    this.services = new ServicesDecode(this)
     this._clientList = client_list;
     this._clientList[this.getKey()] = this;
     this._key =(this._sokt.remoteAddress+":"+this._sokt.remotePort).toString()
@@ -31,7 +37,7 @@ Client.prototype.getKey=function()
 //client data handler
 Client.prototype.data = function(value)
 {
-    if(data.toString()=="close")
+    if(value.toString()=="close")
     {
         this._sokt.close();
         return;
@@ -41,24 +47,21 @@ Client.prototype.data = function(value)
 
       var offset_val = 0;
       var recvie_data=[]
-    while(offset_val<data.length){
+    while(offset_val<value.length){
 
-      var data_len = parseInt((data.slice(offset_val,offset_val+9)).toString("utf8"));
-      var jsonstr = (data.slice(offset_val+9,offset_val+data_len+9)).toString("utf8");
+      var data_len = parseInt((value.slice(offset_val,offset_val+9)).toString("utf8"));
+      var jsonstr = (value.slice(offset_val+9,offset_val+data_len+9)).toString("utf8");
 
       var json=JSON.parse(jsonstr);
       recvie_data.push(json);
       offset_val+=(data_len+9);
     }
-
+        var self= this;
       recvie_data.forEach(function(value){
 
           var command=value.command;
-          var data = value.data;
-          var fun = service[command];
-          if(fun){
-              fun(data);
-          }
+          var data = (value.data).toString();
+         self.services.decode(command,data);
       });
 }
 

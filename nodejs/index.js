@@ -58,125 +58,13 @@ function foreachDir(path,dir,f_list)
 }
 
 
-
-
-
-
-
-
-var service ={};
-var watch_list = [];
-
-var fileList=[
-             {path:"src",isDir:true},
-             {path:"res",isDir:true}
-];
-var fileListIndex={src:0,res:1};
-
-//for(var i=0;i<2;++i)
-//{
-//    var dir_name = fileList[i].path;
-//    foreachDir(root_path+"/"+dir_name,dir_name,fileList)
-//
-//    chokidar.watch(root_path+"/"+dir_name, {ignored: /[\/\\]\./}).on('all', function(event, path) {
-//        console.log(event, path);
-//
-//    });
-//}
-
-
 var file_asyn = new AsynFileManager(root_path);
 file_asyn.addWatchDir("src");
 file_asyn.addWatchDir("res");
 file_asyn.watch();
 
 
-service["2000"] = function(data)
-{
-          if(data!="hello") return;
-	      // console.log(data);
-	        var buf=new Buffer(filename.length)
-	        buf.write(filename,0)
 
-	       sendData(socket,1000,buf);
-
-           var data=JSON.stringify(fileList);
-           sendData(socket,1001,data)
-
-
-        //watch src director change file
-        for(var i=0;i<fileList.length;++i)
-        {
-            var file_data = fileList[i];
-            if(file_data.isDir)
-            {
-                var watcher = new Object();
-                var dir_path = file_data.path;
-                watcher.path =dir_path;
-                watcher.start= function(){
-                    var dir_path_ = this.path;
-                    //fs.watch(root_path+dir_path_,function(event,filename){
-                    //    console.log("event:"+event+" filename:"+filename)
-                    //    //file path
-                    //    var file_p =dir_path_+"/"+filename;
-                    //    if(event=="change")
-                    //    {
-                    //
-                    //        console.log("update file:"+file_p);
-                    //        service["2002"](file_p);
-                    //    }
-                    //    if(event=="rename")
-                    //    {
-                    //       if(fileListIndex[file_p])
-                    //       {
-                    //           //delete file
-                    //           service["2003"](file_p);
-                    //           //fileListIndex[file_p]=null;
-                    //           delete fileListIndex[file_p];
-                    //           console.log("delete file"+file_p);
-                    //       }else{
-                    //           //create file
-                    //           console.log("create file");
-                    //           service["2002"](file_p);
-                    //           fileListIndex[file_p] = true;
-                    //       }
-                    //    }
-                    //
-                    //})
-
-                }
-                watcher.start();
-                watch_list.push(watcher);
-            }
-        }
-
-
-
-}
-
-//recvie file
-service["2002"] = function(value)
-{
-    var filepath = (root_path+value).toString()
-
-    var data=fs.readFile(filepath,function(erro,data){
-          if(erro) throw erro;
-
-      var send_data = readFileBuffer(value,data)
-      sendData(socket,1002,send_data);
-
-    });
-
-
-}
-//delete file
-service["2003"] = function(value)
-{
-    var  send_data = new Object();
-    send_data.file = value;
-    var del_data=JSON.stringify(send_data);
-    sendData(socket,1003,del_data);
-}
 
 var clienter = {};
 var server=net.createServer(function(sock) {
