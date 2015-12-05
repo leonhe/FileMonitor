@@ -26,6 +26,11 @@ AsynFileManger.prototype.addObserver=function(value)
    this._observer.push(value);
 };
 
+AsynFileManger.prototype.hasObserver = function(key)
+{
+    return this._observerIndex[key]!=null;
+}
+
 AsynFileManger.prototype.removeObserver = function(value)
 {
     var key = value.getKey()
