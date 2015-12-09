@@ -1,6 +1,7 @@
 /**
  * Created by yuanfei on 15/12/3.
  */
+var fs = require("fs")
 var ServicesDecode = function(client)
 {
     this.client = client;
@@ -18,28 +19,21 @@ ServicesDecode.prototype.decode=function(cmd,data)
 }
 
 
-command_list["2000"] = function(data)
+command_list["2000"] = function(fileList)
 {
-    if(data!="hello") return;
-    // console.log(data);
-    var buf=new Buffer(filename.length)
-    buf.write(filename,0)
-
-    this.client.sendData(1000,buf);
-
     var data=JSON.stringify(fileList);
-    this.client.sendData(1001,data)
+    this.client.sendData(1000,data)
 }
 
 //recvie file
-command_list["2002"] = function(value)
+command_list["2001"] = function(value)
 {
-    var filepath = (root_path+value).toString()
-
+    var filepath = (value).toString()
+    var thiz = this;
     var data=fs.readFile(filepath,function(erro,data){
         if(erro) throw erro;
-        var send_data = readFileBuffer(value,data)
-        this.client.sendData(1002,send_data);
+        var send_data = thiz.client.readFileBuffer(value,data)
+        thiz.client.sendData(1002,send_data);
 
     });
 

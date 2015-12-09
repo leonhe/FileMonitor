@@ -7,12 +7,16 @@ var ServicesDecode = require("./ServicesDecode")
 
 var Client=function(service,client_list)
 {
-
     this._sokt =service;
     this.services = new ServicesDecode(this)
     this._clientList = client_list;
     this._clientList[this.getKey()] = this;
     this._key =(this._sokt.remoteAddress+":"+this._sokt.remotePort).toString()
+}
+
+Client.prototype.getServices=function()
+{
+    return this.services;
 }
 
 Client.prototype.init = function()
@@ -25,6 +29,11 @@ Client.prototype.init = function()
     this._sokt.on("close",function(data){
         self.close(self,data);
     });
+}
+
+Client.prototype.sendFileList = function(files)
+{
+    this.services.decode(2000,files);
 }
 
 
@@ -42,7 +51,6 @@ Client.prototype.data = function(value)
         this._sokt.close();
         return;
     }
-
 
 
       var offset_val = 0;

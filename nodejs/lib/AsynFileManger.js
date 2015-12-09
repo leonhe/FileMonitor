@@ -24,6 +24,7 @@ AsynFileManger.prototype.deleteFileList= function (value) {
 AsynFileManger.prototype.addObserver=function(value)
 {
     this._observerIndex[value.getKey()] = this._observer.length;
+    value.sendFileList(this._fileList);
    this._observer.push(value);
 };
 

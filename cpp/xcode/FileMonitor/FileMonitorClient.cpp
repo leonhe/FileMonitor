@@ -199,7 +199,7 @@ void FileMonitorClient::getFileData(const std::string &path,bool isDir)
             }
         
     }else{
-        sendData(2002,path.c_str(),path.size());
+        sendData(2001,path.c_str(),path.size());
     }
     
 }

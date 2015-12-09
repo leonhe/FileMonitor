@@ -1,5 +1,5 @@
 var net = require('net');
-var fs = require("fs")
+
 var os = require("os")
 
 var Client = require("./lib/Client");
