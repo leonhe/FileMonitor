@@ -10,6 +10,7 @@ var AsynFileManger= function(rootPath){
     this._fileListIndex={};
     this._observer = [];
     this._observerIndex = {};
+
 };
 
 AsynFileManger.prototype.deleteFileList= function (value) {
@@ -81,7 +82,6 @@ AsynFileManger.prototype.unlinkDir=function(value)
 AsynFileManger.prototype.watch = function()
 {
     var self = this;
-    this._watchDirList.forEach(function(value){
 
         chokidar.watch(self._rootPath, {ignored: /[\/\\]\./}).on('all', function(event, path) {
             console.log(event, path);
@@ -90,9 +90,7 @@ AsynFileManger.prototype.watch = function()
             {
                 act.call(self,path);
             }
-        })
-
-    });
+        });
 
 }
 
