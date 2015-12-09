@@ -114,11 +114,11 @@ void FileMonitorClient::getFileList()
     _receiveThread = std::thread(std::bind( &FileMonitorClient::loopReceiveFile, this));
     _receiveThread.detach();
     
-    const char buf[]="hello";
-    ssize_t len = strlen(buf);
-//    std::string command = "2000";
-    
-    this->sendData(2000,buf, len);
+//    const char buf[]="hello";
+//    ssize_t len = strlen(buf);
+////    std::string command = "2000";
+//    
+//    this->sendData(2000,buf, len);
     
 }
 
@@ -187,10 +187,14 @@ void FileMonitorClient::getFileData(const std::string &path,bool isDir)
                 auto dirnane = data.substr(0,pos);
                 data=data.substr(pos+1,path.size());
                 parent_dir.append(dirnane);
-                int res= mkdir(parent_dir.c_str(),S_IRWXU);
-                if (res==-1) {
-                    std::cout<<"mkdir"<<dirnane<<" error"<<std::endl;
+                ifstream fin(parent_dir.c_str());
+                if (!fin) {
+                    int res= mkdir(parent_dir.c_str(),S_IRWXU);
+                    if (res==-1) {
+                        std::cout<<"mkdir"<<dirnane<<" error"<<std::endl;
+                    }
                 }
+                
                 parent_dir.append("/");
             }
         
@@ -209,16 +213,6 @@ void FileMonitorClient::excuteRecvList()
         const char* data_buf = recv_it->second;
         if (command==1000)
         {
-            std::fstream fs;
-            fs.open(data_buf,std::fstream::in | std::fstream::out | std::fstream::app);
-            filename=data_buf;
-            fs.close();
-        }else if (command==1001){
-            std::fstream fs;
-            fs.open(filename.c_str(),std::fstream::out);
-            fs<<data_buf;
-            fs.flush();
-            fs.close();
             
             rapidjson::Document d;
             d.Parse(data_buf);
