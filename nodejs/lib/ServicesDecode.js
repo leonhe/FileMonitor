@@ -39,7 +39,7 @@ command_list["2001"] = function(value)
 
 }
 //delete file
-command_list["2003"] = function(value)
+command_list["2002"] = function(value)
 {
     var  send_data = new Object();
     send_data.file = value;

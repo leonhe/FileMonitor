@@ -72,7 +72,7 @@ AsynFileManger.prototype.unlink=function(value)
 //update file
 AsynFileManger.prototype.change = function(value)
 {
-
+    this.update({key:"change",data:value});
 }
 //delete directory
 AsynFileManger.prototype.unlinkDir=function(value)

@@ -121,9 +121,12 @@ Client.prototype.sendData=function(command_value,data)
 
 
 
-Client.prototype.update = function(data)
+Client.prototype.update = function(value)
 {
-
+    if(value.key=="change")
+    {
+        this.services.decode(2001,value.data)
+    }
 }
 
 module.exports = Client;

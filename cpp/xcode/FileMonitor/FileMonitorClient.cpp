@@ -290,9 +290,9 @@ void FileMonitorClient::loopReceiveFile()
 {
     while(true)
     {
-        close_mtx_.lock();
-        if (close_) break;
-        close_mtx_.unlock();
+//        close_mtx_.lock();
+////        if (close_) break;
+//        close_mtx_.unlock();
         
         //read command
         int command = 0;
