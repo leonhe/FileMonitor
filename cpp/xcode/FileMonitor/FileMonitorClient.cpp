@@ -234,7 +234,7 @@ void FileMonitorClient::excuteRecvList()
             }
             
             
-        }else if(command==1002){
+        }else if(command==1001){
             
             //read file name buffer size
             ssize_t filename_len=0;
@@ -259,7 +259,7 @@ void FileMonitorClient::excuteRecvList()
             out.flush();
             out.close();
             
-        }else if(command==1003){
+        }else if(command==1002){
             //delete client file
             rapidjson::Document d;
             d.Parse(data_buf);
